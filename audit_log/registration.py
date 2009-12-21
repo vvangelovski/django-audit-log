@@ -13,4 +13,4 @@ class FieldRegistry(object):
         return self.__class__._registry.setdefault(self._fieldcls, {}).get(model, [])
     
     def __contains__(self, model):
-        return model in self.__class__._registry
+        return model in self.__class__._registry.setdefault(self._fieldcls, {})

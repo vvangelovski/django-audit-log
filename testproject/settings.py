@@ -61,6 +61,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'audit_log.middleware.UserLoggingMiddleware',
 )
 
 ROOT_URLCONF = 'testproject.urls'
@@ -76,4 +77,7 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.sites',
+    'django.contrib.admin',
+    'store',
+
 )
