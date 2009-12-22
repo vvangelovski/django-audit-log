@@ -9,9 +9,16 @@ class ProductAdmin(admin.ModelAdmin):
     pass
 
 
+class QuantityInline(admin.TabularInline):
+    model = SoldQuantity
+    
+
+
 class InvoiceAdmin(admin.ModelAdmin):
-    exclude = ('sales_person',)
-    list_display = ('product', 'quantity', 'sales_person',)
+    list_display = ('date',)    
+    inlines = [
+        QuantityInline,
+    ]
     
 
 

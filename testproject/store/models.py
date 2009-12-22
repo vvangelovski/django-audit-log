@@ -1,6 +1,7 @@
 from django.db import models
 from audit_log.models.fields import LastUserField
 from audit_log.models.managers import AuditLog
+import datetime
 
 class ProductCategory(models.Model):
     name = models.CharField(max_length=150, primary_key = True)
@@ -22,7 +23,15 @@ class WarehouseEntry(models.Model):
     
     audit_log = AuditLog()
 
+
 class SaleInvoice(models.Model):
+    date = models.DateTimeField(default = datetime.datetime.now)
+
+    audit_log = AuditLog()
+
+class SoldQuantity(models.Model):
     product = models.ForeignKey(Product)
     quantity = models.DecimalField(max_digits = 10, decimal_places = 2)
-    sales_person = LastUserField()
+    sale = models.ForeignKey(SaleInvoice)
+
+    audit_log = AuditLog()
