@@ -31,7 +31,7 @@ class AuditLogManager(models.Manager):
         """
         
         if not self.instance:
-            raise TypeError("Can't use moset_recent() without a %s instance."%
+            raise TypeError("Can't use most_recent() without an instanceof %s."%
              self.instance._meta.object_name)
         fields = (field.name for field in self.instance._meta.fields)
         
@@ -149,7 +149,7 @@ class AuditLog(object):
                 ('U', 'Changed'),
                 ('D', 'Deleted'),
             )),
-            'action_object' : LogEntryObjectDescriptor(model),
+            'object_state' : LogEntryObjectDescriptor(model),
             '__unicode__' : lambda self: u'%s as of %s'% (self.action_object, self.action_date),
         }
             
@@ -172,6 +172,6 @@ class AuditLog(object):
         attrs = self.copy_fields(model)
         attrs.update(self.get_extra_fields(model))
         attrs.update(Meta = type('Meta', (), self.get_meta_options(model)))
-        name = '%sAuditLog'%model._meta.object_name
+        name = '%sAuditLogEntry'%model._meta.object_name
         return type(name, (models.Model,), attrs)
         
