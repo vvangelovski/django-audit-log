@@ -9,6 +9,9 @@ class ProductCategory(models.Model):
     
     audit_log = AuditLog()
     
+    def __unicode__(self):
+        return self.name
+    
 class Product(models.Model):
     name = models.CharField(max_length = 150)
     description = models.TextField()
@@ -16,6 +19,10 @@ class Product(models.Model):
     category = models.ForeignKey(ProductCategory)
     
     audit_log = AuditLog()
+    
+    
+    def __unicode__(self):
+        return self.name
 
 class WarehouseEntry(models.Model):
     product = models.ForeignKey(Product)
@@ -27,7 +34,11 @@ class WarehouseEntry(models.Model):
 class SaleInvoice(models.Model):
     date = models.DateTimeField(default = datetime.datetime.now)
 
-    audit_log = AuditLog()
+    audit_log = AuditLog(exclude = ['date',])
+    
+    
+    def __unicode__(self):
+        return str(self.date)
 
 class SoldQuantity(models.Model):
     product = models.ForeignKey(Product)
@@ -35,3 +46,7 @@ class SoldQuantity(models.Model):
     sale = models.ForeignKey(SaleInvoice)
 
     audit_log = AuditLog()
+    
+    
+    def __unicode__(self):
+        return "%s X %s"%(self.product.name, self.quantity)

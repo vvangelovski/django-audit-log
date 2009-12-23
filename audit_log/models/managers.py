@@ -25,54 +25,24 @@ class AuditLogManager(models.Manager):
         f = {self.instance._meta.pk.name : self.instance.pk}
         return super(AuditLogManager, self).get_query_set().filter(**f)
     
-    def most_recent(self):
-        """
-        Returns the most recent copy of the instance available in the audit log.
-        """
-        
-        if not self.instance:
-            raise TypeError("Can't use most_recent() without an instanceof %s."%
-             self.instance._meta.object_name)
-        fields = (field.name for field in self.instance._meta.fields)
-        
-        try:
-            values = self.values_list(*fields)[0]
-        
-        except IndexError:
-            raise self.instance.DoesNotExist("%s has no audit log entries."% self.instance._meta.object_name)
-        
-        return self.instance.__class__(*values)
-    
-    def as_of(self, date):
-        """
-        Returns an instance of the original model with all the attributes set
-        according to what was present on the object on the date provided.
-        """
-        
-        if not self.instance:
-            raise TypeError("Can't use as_of() without an instance of %s"% self.instance._meta.object_name)
-            fields = (field.name for field in self.instance._meta.fields)
-            qs = self.filter(action_date__lte = date)
-            try:
-                values = qs.values_list('history_type', *fields)[0]
-            except IndexError:
-                raise self.instance.DoesNotExist("%s was not yet created as of %s."%(self.instance._meta.object_name, date))
-            
-            if values[0] == '-':
-                raise self.instance.DoesNotExist("%s has been deleted."%(self.instance._meta.object_name))
-            
-            return self.instance.__class__(*values[1:])
             
 class AuditLogDescriptor(object):
-    def __init__(self, model):
+    def __init__(self, model, manager_class):
         self.model = model
+        self._manager_class = manager_class
     
     def __get__(self, instance, owner):
         if instance is None:
-            return AuditLogManager(self.model)
-        return AuditLogManager(self.model, instance)
+            return manager_class(self.model)
+        return self._manager_class(self.model, instance)
 
 class AuditLog(object):
+    
+    manager_class = AuditLogManager
+    
+    def __init__(self, exclude = []):
+        self._exclude = exclude
+    
     def contribute_to_class(self, cls, name):
         self.manager_name = name
         models.signals.class_prepared.connect(self.finalize, sender = cls)
@@ -82,7 +52,8 @@ class AuditLog(object):
         manager = getattr(instance, self.manager_name)
         attrs = {}
         for field in instance._meta.fields:
-            attrs[field.attname] = getattr(instance, field.attname)
+            if field.attname not in self._exclude:
+                attrs[field.attname] = getattr(instance, field.attname)
         manager.create(action_type = action_type, **attrs)
     
     def post_save(self, instance, created, **kwargs):
@@ -99,44 +70,48 @@ class AuditLog(object):
         models.signals.post_save.connect(self.post_save, sender = sender, weak = False)
         models.signals.post_delete.connect(self.post_delete, sender = sender, weak = False)
         
-        descriptor = AuditLogDescriptor(log_entry_model)
+        descriptor = AuditLogDescriptor(log_entry_model, self.manager_class)
         setattr(sender, self.manager_name, descriptor)
     
     def copy_fields(self, model):
         """
-        Creates copies of the fields for the provided model, returning a 
+        Creates copies of the fields we are keeping
+        track of for the provided model, returning a 
         dictionary mapping field name to a copied field object.
         """
         fields = {'__module__' : model.__module__}
         
         for field in model._meta.fields:
-            field  = copy.copy(field)
             
-            if isinstance(field, models.AutoField):
-                #we replace the AutoField of the original model
-                #with an IntegerField because a model can
-                #have only one autofield.
+            if not field.name in self._exclude:
                 
-                field.__class__ = models.IntegerField
+                field  = copy.copy(field)
             
-            if field.primary_key or field.unique:
-                #unique fields of the original model
-                #can not be guaranteed to be unique
-                #in the audit log entry but they
-                #should still be indexed for faster lookups.
+                if isinstance(field, models.AutoField):
+                    #we replace the AutoField of the original model
+                    #with an IntegerField because a model can
+                    #have only one autofield.
                 
-                field.primary_key = False
-                field._unique = False
-                field.db_index = True
+                    field.__class__ = models.IntegerField
             
-            fields[field.name] = field
+                if field.primary_key or field.unique:
+                    #unique fields of the original model
+                    #can not be guaranteed to be unique
+                    #in the audit log entry but they
+                    #should still be indexed for faster lookups.
+                
+                    field.primary_key = False
+                    field._unique = False
+                    field.db_index = True
+            
+                fields[field.name] = field
             
         return fields
         
-    def get_extra_fields(self, model):
+    def get_logging_fields(self, model):
         """
         Returns a dictionary mapping of the fields that are used for
-        keeping the acutal audit log entries
+        keeping the acutal audit log entries.
         """
         rel_name = '_%s_audit_log_entry'%model._meta.object_name.lower()
         
@@ -170,7 +145,7 @@ class AuditLog(object):
         """
         
         attrs = self.copy_fields(model)
-        attrs.update(self.get_extra_fields(model))
+        attrs.update(self.get_logging_fields(model))
         attrs.update(Meta = type('Meta', (), self.get_meta_options(model)))
         name = '%sAuditLogEntry'%model._meta.object_name
         return type(name, (models.Model,), attrs)
