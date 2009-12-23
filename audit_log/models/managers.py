@@ -125,7 +125,7 @@ class AuditLog(object):
                 ('D', 'Deleted'),
             )),
             'object_state' : LogEntryObjectDescriptor(model),
-            '__unicode__' : lambda self: u'%s as of %s'% (self.action_object, self.action_date),
+            '__unicode__' : lambda self: u'%s as of %s'% (self.object_state, self.action_date),
         }
             
     
