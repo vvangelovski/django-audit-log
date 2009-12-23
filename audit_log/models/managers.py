@@ -1,6 +1,7 @@
 import copy
 import datetime
 from django.db import models
+from django.utils.functional import curry
 
 from audit_log.models.fields import LastUserField
 
@@ -33,7 +34,7 @@ class AuditLogDescriptor(object):
     
     def __get__(self, instance, owner):
         if instance is None:
-            return manager_class(self.model)
+            return self._manager_class(self.model)
         return self._manager_class(self.model, instance)
 
 class AuditLog(object):
@@ -107,13 +108,31 @@ class AuditLog(object):
                 fields[field.name] = field
             
         return fields
-        
+    
+
+    
     def get_logging_fields(self, model):
         """
         Returns a dictionary mapping of the fields that are used for
         keeping the acutal audit log entries.
         """
         rel_name = '_%s_audit_log_entry'%model._meta.object_name.lower()
+        
+        def entry_instance_to_unicode(log_entry):
+            try:
+                result = u'%s: %s %s at %s'%(model._meta.object_name, 
+                                                log_entry.object_state, 
+                                                log_entry.get_action_type_display().lower(),
+                                                log_entry.action_date,
+                                                
+                                                )
+            except AttributeError:
+                result = u'%s %s at %s'%(model._meta.object_name,
+                                                log_entry.get_action_type_display().lower(),
+                                                log_entry.action_date
+                                                
+                                                )
+            return result
         
         return {
             'action_id' : models.AutoField(primary_key = True),
@@ -125,7 +144,7 @@ class AuditLog(object):
                 ('D', 'Deleted'),
             )),
             'object_state' : LogEntryObjectDescriptor(model),
-            '__unicode__' : lambda self: u'%s as of %s'% (self.object_state, self.action_date),
+            '__unicode__' : entry_instance_to_unicode,
         }
             
     
