@@ -2,6 +2,9 @@ import copy
 import datetime
 from django.db import models
 from django.utils.functional import curry
+from django.utils.translation import ugettext_lazy as _
+
+
 
 from audit_log.models.fields import LastUserField
 
@@ -139,9 +142,9 @@ class AuditLog(object):
             'action_date' : models.DateTimeField(default = datetime.datetime.now),
             'action_user' : LastUserField(related_name = rel_name),
             'action_type' : models.CharField(max_length = 1, choices = (
-                ('I', 'Created'),
-                ('U', 'Changed'),
-                ('D', 'Deleted'),
+                ('I', _('Created')),
+                ('U', _('Changed')),
+                ('D', _('Deleted')),
             )),
             'object_state' : LogEntryObjectDescriptor(model),
             '__unicode__' : entry_instance_to_unicode,
