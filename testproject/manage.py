@@ -1,8 +1,8 @@
 #!/usr/bin/env python
-import os, sys
-pwd = os.path.dirname(__file__)
-parent = os.path.join(pwd, '..')
-sys.path.append(parent)
+#import os, sys
+#pwd = os.path.dirname(__file__)
+#parent = os.path.join(pwd, '..')
+#sys.path.append(parent)
 
 from django.core.management import execute_manager
 try:

@@ -1,0 +1,24 @@
+Installing the latest development version of django-audit-log
+----------------------------------------------------------
+The setup script for this package requires setuptools, you can
+download and run the script from here:
+
+	http://peak.telecommunity.com/dist/ez_setup.py
+
+If you want to install the development version, check out the code from
+the mercurial repository
+ 
+    hg clone https://django-audit-log.googlecode.com/hg/ django-audit-log 
+ 
+cd into the django-audit-log directory and run:
+	
+	python setup.py develop
+
+that will just make a link in your site-packages folder pointing to where 
+you cloned the project. At this point you can use it or hack on the code if you
+wish.
+
+To install it you can run:
+
+	python setup.py install
+ 

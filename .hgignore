@@ -4,4 +4,4 @@ syntax: glob
 *.pyc
 *~
 *.db
-
+*.egg-info
