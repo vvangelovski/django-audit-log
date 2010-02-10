@@ -11,5 +11,15 @@ setup(
     description = 'Audit trail for django models',
     long_description = 'This app automatically tracks changes made to models over time as well as which user made the changes.',
     url = 'http://code.google.com/p/django-audit-log/',
-    include_package_data = True
+    download_url = 'http://django-audit-log.googlecode.com/files/django-audit-log.0.1.tar.gz',
+    include_package_data = True,
+    
+    classifiers=[
+        'Development Status :: 3 - Alpha',
+        'Environment :: Plugins',
+        'Framework :: Django',
+        'Intended Audience :: Developers',
+        'License :: OSI Approved :: BSD License',
+        'Topic :: Software Development :: Libraries :: Python Modules',
+    ],
 )
