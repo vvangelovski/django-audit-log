@@ -89,7 +89,7 @@ class AuditLog(object):
             
             if not field.name in self._exclude:
                 
-                field  = copy.copy(field)
+                field  = copy.deepcopy(field)
             
                 if isinstance(field, models.AutoField):
                     #we replace the AutoField of the original model
@@ -107,6 +107,9 @@ class AuditLog(object):
                     field.primary_key = False
                     field._unique = False
                     field.db_index = True
+                
+                if field.rel and field.rel.related_name:
+                    field.rel.related_name = '_auditlog_%s' % field.rel.related_name
             
                 fields[field.name] = field
             

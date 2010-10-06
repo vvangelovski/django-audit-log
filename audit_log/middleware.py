@@ -13,10 +13,10 @@ class UserLoggingMiddleware(object):
                 user = None
         
             update_users = curry(self.update_users, user)
-            signals.pre_save.connect(update_users, dispatch_uid = request, weak = False)
+            signals.pre_save.connect(update_users,  dispatch_uid = (self.__class__, request,), weak = False)
     
     def process_response(self, request, response):
-        signals.pre_save.disconnect(dispatch_uid = request)
+        signals.pre_save.disconnect(dispatch_uid =  (self.__class__, request,))
         return response
     
     def update_users(self, user, sender, instance, **kwargs):
