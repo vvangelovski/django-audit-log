@@ -1,0 +1,876 @@
+[
+ {
+  "pk": 5, 
+  "model": "contenttypes.contenttype", 
+  "fields": {
+   "model": "contenttype", 
+   "name": "content type", 
+   "app_label": "contenttypes"
+  }
+ }, 
+ {
+  "pk": 2, 
+  "model": "contenttypes.contenttype", 
+  "fields": {
+   "model": "group", 
+   "name": "group", 
+   "app_label": "auth"
+  }
+ }, 
+ {
+  "pk": 8, 
+  "model": "contenttypes.contenttype", 
+  "fields": {
+   "model": "logentry", 
+   "name": "log entry", 
+   "app_label": "admin"
+  }
+ }, 
+ {
+  "pk": 4, 
+  "model": "contenttypes.contenttype", 
+  "fields": {
+   "model": "message", 
+   "name": "message", 
+   "app_label": "auth"
+  }
+ }, 
+ {
+  "pk": 1, 
+  "model": "contenttypes.contenttype", 
+  "fields": {
+   "model": "permission", 
+   "name": "permission", 
+   "app_label": "auth"
+  }
+ }, 
+ {
+  "pk": 12, 
+  "model": "contenttypes.contenttype", 
+  "fields": {
+   "model": "product", 
+   "name": "product", 
+   "app_label": "store"
+  }
+ }, 
+ {
+  "pk": 11, 
+  "model": "contenttypes.contenttype", 
+  "fields": {
+   "model": "productauditlogentry", 
+   "name": "product audit log entry", 
+   "app_label": "store"
+  }
+ }, 
+ {
+  "pk": 10, 
+  "model": "contenttypes.contenttype", 
+  "fields": {
+   "model": "productcategory", 
+   "name": "product category", 
+   "app_label": "store"
+  }
+ }, 
+ {
+  "pk": 9, 
+  "model": "contenttypes.contenttype", 
+  "fields": {
+   "model": "productcategoryauditlogentry", 
+   "name": "product category audit log entry", 
+   "app_label": "store"
+  }
+ }, 
+ {
+  "pk": 14, 
+  "model": "contenttypes.contenttype", 
+  "fields": {
+   "model": "saleinvoice", 
+   "name": "sale invoice", 
+   "app_label": "store"
+  }
+ }, 
+ {
+  "pk": 13, 
+  "model": "contenttypes.contenttype", 
+  "fields": {
+   "model": "saleinvoiceauditlogentry", 
+   "name": "sale invoice audit log entry", 
+   "app_label": "store"
+  }
+ }, 
+ {
+  "pk": 6, 
+  "model": "contenttypes.contenttype", 
+  "fields": {
+   "model": "session", 
+   "name": "session", 
+   "app_label": "sessions"
+  }
+ }, 
+ {
+  "pk": 7, 
+  "model": "contenttypes.contenttype", 
+  "fields": {
+   "model": "site", 
+   "name": "site", 
+   "app_label": "sites"
+  }
+ }, 
+ {
+  "pk": 16, 
+  "model": "contenttypes.contenttype", 
+  "fields": {
+   "model": "soldquantity", 
+   "name": "sold quantity", 
+   "app_label": "store"
+  }
+ }, 
+ {
+  "pk": 15, 
+  "model": "contenttypes.contenttype", 
+  "fields": {
+   "model": "soldquantityauditlogentry", 
+   "name": "sold quantity audit log entry", 
+   "app_label": "store"
+  }
+ }, 
+ {
+  "pk": 3, 
+  "model": "contenttypes.contenttype", 
+  "fields": {
+   "model": "user", 
+   "name": "user", 
+   "app_label": "auth"
+  }
+ }, 
+ {
+  "pk": "8d32340d611dd555caed7ac976df5b11", 
+  "model": "sessions.session", 
+  "fields": {
+   "expire_date": "2010-10-20 08:10:27", 
+   "session_data": "gAJ9cQEoVRJfYXV0aF91c2VyX2JhY2tlbmRxAlUpZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5k\ncy5Nb2RlbEJhY2tlbmRxA1UNX2F1dGhfdXNlcl9pZHEESwF1LjQzNzE1YzRkMzgzNzI5YTc4OGJh\nMzI2ZGY1NTA5Mjlk\n"
+  }
+ }, 
+ {
+  "pk": 1, 
+  "model": "sites.site", 
+  "fields": {
+   "domain": "example.com", 
+   "name": "example.com"
+  }
+ }, 
+ {
+  "pk": 8, 
+  "model": "admin.logentry", 
+  "fields": {
+   "action_flag": 2, 
+   "action_time": "2010-10-06 08:14:24", 
+   "object_repr": "Red door", 
+   "object_id": "4", 
+   "change_message": "Changed price.", 
+   "user": 1, 
+   "content_type": 12
+  }
+ }, 
+ {
+  "pk": 7, 
+  "model": "admin.logentry", 
+  "fields": {
+   "action_flag": 1, 
+   "action_time": "2010-10-06 08:14:07", 
+   "object_repr": "Red door", 
+   "object_id": "4", 
+   "change_message": "", 
+   "user": 1, 
+   "content_type": 12
+  }
+ }, 
+ {
+  "pk": 6, 
+  "model": "admin.logentry", 
+  "fields": {
+   "action_flag": 2, 
+   "action_time": "2010-10-06 08:13:41", 
+   "object_repr": "Black window", 
+   "object_id": "3", 
+   "change_message": "Changed description.", 
+   "user": 1, 
+   "content_type": 12
+  }
+ }, 
+ {
+  "pk": 5, 
+  "model": "admin.logentry", 
+  "fields": {
+   "action_flag": 1, 
+   "action_time": "2010-10-06 08:13:22", 
+   "object_repr": "Black window", 
+   "object_id": "3", 
+   "change_message": "", 
+   "user": 1, 
+   "content_type": 12
+  }
+ }, 
+ {
+  "pk": 4, 
+  "model": "admin.logentry", 
+  "fields": {
+   "action_flag": 1, 
+   "action_time": "2010-10-06 08:12:08", 
+   "object_repr": "White doors", 
+   "object_id": "2", 
+   "change_message": "", 
+   "user": 1, 
+   "content_type": 12
+  }
+ }, 
+ {
+  "pk": 3, 
+  "model": "admin.logentry", 
+  "fields": {
+   "action_flag": 1, 
+   "action_time": "2010-10-06 08:11:42", 
+   "object_repr": "White window", 
+   "object_id": "1", 
+   "change_message": "", 
+   "user": 1, 
+   "content_type": 12
+  }
+ }, 
+ {
+  "pk": 2, 
+  "model": "admin.logentry", 
+  "fields": {
+   "action_flag": 1, 
+   "action_time": "2010-10-06 08:11:13", 
+   "object_repr": "Doors", 
+   "object_id": "Doors", 
+   "change_message": "", 
+   "user": 1, 
+   "content_type": 10
+  }
+ }, 
+ {
+  "pk": 1, 
+  "model": "admin.logentry", 
+  "fields": {
+   "action_flag": 1, 
+   "action_time": "2010-10-06 08:10:51", 
+   "object_repr": "Windows", 
+   "object_id": "Windows", 
+   "change_message": "", 
+   "user": 1, 
+   "content_type": 10
+  }
+ }, 
+ {
+  "pk": 2, 
+  "model": "store.productcategoryauditlogentry", 
+  "fields": {
+   "action_date": "2010-10-06 08:11:13", 
+   "action_user": 1, 
+   "name": "Doors", 
+   "action_type": "I", 
+   "description": "Nice stylish doors for your house"
+  }
+ }, 
+ {
+  "pk": 1, 
+  "model": "store.productcategoryauditlogentry", 
+  "fields": {
+   "action_date": "2010-10-06 08:10:51", 
+   "action_user": 1, 
+   "name": "Windows", 
+   "action_type": "I", 
+   "description": "Nice stylish windows for your house"
+  }
+ }, 
+ {
+  "pk": "Windows", 
+  "model": "store.productcategory", 
+  "fields": {
+   "description": "Nice stylish windows for your house"
+  }
+ }, 
+ {
+  "pk": "Doors", 
+  "model": "store.productcategory", 
+  "fields": {
+   "description": "Nice stylish doors for your house"
+  }
+ }, 
+ {
+  "pk": 6, 
+  "model": "store.productauditlogentry", 
+  "fields": {
+   "category": "Doors", 
+   "description": "Nice stylish reed door for your house", 
+   "price": "33", 
+   "action_user": 1, 
+   "action_date": "2010-10-06 08:14:24", 
+   "action_type": "U", 
+   "id": 4, 
+   "name": "Red door"
+  }
+ }, 
+ {
+  "pk": 5, 
+  "model": "store.productauditlogentry", 
+  "fields": {
+   "category": "Doors", 
+   "description": "Nice stylish reed door for your house", 
+   "price": "333", 
+   "action_user": 1, 
+   "action_date": "2010-10-06 08:14:07", 
+   "action_type": "I", 
+   "id": 4, 
+   "name": "Red door"
+  }
+ }, 
+ {
+  "pk": 4, 
+  "model": "store.productauditlogentry", 
+  "fields": {
+   "category": "Windows", 
+   "description": "Nice stylish black window for your house", 
+   "price": "22", 
+   "action_user": 1, 
+   "action_date": "2010-10-06 08:13:41", 
+   "action_type": "U", 
+   "id": 3, 
+   "name": "Black window"
+  }
+ }, 
+ {
+  "pk": 3, 
+  "model": "store.productauditlogentry", 
+  "fields": {
+   "category": "Windows", 
+   "description": "Black window", 
+   "price": "22", 
+   "action_user": 1, 
+   "action_date": "2010-10-06 08:13:22", 
+   "action_type": "I", 
+   "id": 3, 
+   "name": "Black window"
+  }
+ }, 
+ {
+  "pk": 2, 
+  "model": "store.productauditlogentry", 
+  "fields": {
+   "category": "Doors", 
+   "description": "Nice stylish white door for your house", 
+   "price": "22", 
+   "action_user": 1, 
+   "action_date": "2010-10-06 08:12:08", 
+   "action_type": "I", 
+   "id": 2, 
+   "name": "White doors"
+  }
+ }, 
+ {
+  "pk": 1, 
+  "model": "store.productauditlogentry", 
+  "fields": {
+   "category": "Windows", 
+   "description": "Nice stylish white window for your house", 
+   "price": "33", 
+   "action_user": 1, 
+   "action_date": "2010-10-06 08:11:42", 
+   "action_type": "I", 
+   "id": 1, 
+   "name": "White window"
+  }
+ }, 
+ {
+  "pk": 1, 
+  "model": "store.product", 
+  "fields": {
+   "category": "Windows", 
+   "price": "33", 
+   "name": "White window", 
+   "description": "Nice stylish white window for your house"
+  }
+ }, 
+ {
+  "pk": 2, 
+  "model": "store.product", 
+  "fields": {
+   "category": "Doors", 
+   "price": "22", 
+   "name": "White doors", 
+   "description": "Nice stylish white door for your house"
+  }
+ }, 
+ {
+  "pk": 3, 
+  "model": "store.product", 
+  "fields": {
+   "category": "Windows", 
+   "price": "22", 
+   "name": "Black window", 
+   "description": "Nice stylish black window for your house"
+  }
+ }, 
+ {
+  "pk": 4, 
+  "model": "store.product", 
+  "fields": {
+   "category": "Doors", 
+   "price": "33", 
+   "name": "Red door", 
+   "description": "Nice stylish reed door for your house"
+  }
+ }, 
+ {
+  "pk": 22, 
+  "model": "auth.permission", 
+  "fields": {
+   "codename": "add_logentry", 
+   "name": "Can add log entry", 
+   "content_type": 8
+  }
+ }, 
+ {
+  "pk": 23, 
+  "model": "auth.permission", 
+  "fields": {
+   "codename": "change_logentry", 
+   "name": "Can change log entry", 
+   "content_type": 8
+  }
+ }, 
+ {
+  "pk": 24, 
+  "model": "auth.permission", 
+  "fields": {
+   "codename": "delete_logentry", 
+   "name": "Can delete log entry", 
+   "content_type": 8
+  }
+ }, 
+ {
+  "pk": 4, 
+  "model": "auth.permission", 
+  "fields": {
+   "codename": "add_group", 
+   "name": "Can add group", 
+   "content_type": 2
+  }
+ }, 
+ {
+  "pk": 5, 
+  "model": "auth.permission", 
+  "fields": {
+   "codename": "change_group", 
+   "name": "Can change group", 
+   "content_type": 2
+  }
+ }, 
+ {
+  "pk": 6, 
+  "model": "auth.permission", 
+  "fields": {
+   "codename": "delete_group", 
+   "name": "Can delete group", 
+   "content_type": 2
+  }
+ }, 
+ {
+  "pk": 10, 
+  "model": "auth.permission", 
+  "fields": {
+   "codename": "add_message", 
+   "name": "Can add message", 
+   "content_type": 4
+  }
+ }, 
+ {
+  "pk": 11, 
+  "model": "auth.permission", 
+  "fields": {
+   "codename": "change_message", 
+   "name": "Can change message", 
+   "content_type": 4
+  }
+ }, 
+ {
+  "pk": 12, 
+  "model": "auth.permission", 
+  "fields": {
+   "codename": "delete_message", 
+   "name": "Can delete message", 
+   "content_type": 4
+  }
+ }, 
+ {
+  "pk": 1, 
+  "model": "auth.permission", 
+  "fields": {
+   "codename": "add_permission", 
+   "name": "Can add permission", 
+   "content_type": 1
+  }
+ }, 
+ {
+  "pk": 2, 
+  "model": "auth.permission", 
+  "fields": {
+   "codename": "change_permission", 
+   "name": "Can change permission", 
+   "content_type": 1
+  }
+ }, 
+ {
+  "pk": 3, 
+  "model": "auth.permission", 
+  "fields": {
+   "codename": "delete_permission", 
+   "name": "Can delete permission", 
+   "content_type": 1
+  }
+ }, 
+ {
+  "pk": 7, 
+  "model": "auth.permission", 
+  "fields": {
+   "codename": "add_user", 
+   "name": "Can add user", 
+   "content_type": 3
+  }
+ }, 
+ {
+  "pk": 8, 
+  "model": "auth.permission", 
+  "fields": {
+   "codename": "change_user", 
+   "name": "Can change user", 
+   "content_type": 3
+  }
+ }, 
+ {
+  "pk": 9, 
+  "model": "auth.permission", 
+  "fields": {
+   "codename": "delete_user", 
+   "name": "Can delete user", 
+   "content_type": 3
+  }
+ }, 
+ {
+  "pk": 13, 
+  "model": "auth.permission", 
+  "fields": {
+   "codename": "add_contenttype", 
+   "name": "Can add content type", 
+   "content_type": 5
+  }
+ }, 
+ {
+  "pk": 14, 
+  "model": "auth.permission", 
+  "fields": {
+   "codename": "change_contenttype", 
+   "name": "Can change content type", 
+   "content_type": 5
+  }
+ }, 
+ {
+  "pk": 15, 
+  "model": "auth.permission", 
+  "fields": {
+   "codename": "delete_contenttype", 
+   "name": "Can delete content type", 
+   "content_type": 5
+  }
+ }, 
+ {
+  "pk": 16, 
+  "model": "auth.permission", 
+  "fields": {
+   "codename": "add_session", 
+   "name": "Can add session", 
+   "content_type": 6
+  }
+ }, 
+ {
+  "pk": 17, 
+  "model": "auth.permission", 
+  "fields": {
+   "codename": "change_session", 
+   "name": "Can change session", 
+   "content_type": 6
+  }
+ }, 
+ {
+  "pk": 18, 
+  "model": "auth.permission", 
+  "fields": {
+   "codename": "delete_session", 
+   "name": "Can delete session", 
+   "content_type": 6
+  }
+ }, 
+ {
+  "pk": 19, 
+  "model": "auth.permission", 
+  "fields": {
+   "codename": "add_site", 
+   "name": "Can add site", 
+   "content_type": 7
+  }
+ }, 
+ {
+  "pk": 20, 
+  "model": "auth.permission", 
+  "fields": {
+   "codename": "change_site", 
+   "name": "Can change site", 
+   "content_type": 7
+  }
+ }, 
+ {
+  "pk": 21, 
+  "model": "auth.permission", 
+  "fields": {
+   "codename": "delete_site", 
+   "name": "Can delete site", 
+   "content_type": 7
+  }
+ }, 
+ {
+  "pk": 34, 
+  "model": "auth.permission", 
+  "fields": {
+   "codename": "add_product", 
+   "name": "Can add product", 
+   "content_type": 12
+  }
+ }, 
+ {
+  "pk": 35, 
+  "model": "auth.permission", 
+  "fields": {
+   "codename": "change_product", 
+   "name": "Can change product", 
+   "content_type": 12
+  }
+ }, 
+ {
+  "pk": 36, 
+  "model": "auth.permission", 
+  "fields": {
+   "codename": "delete_product", 
+   "name": "Can delete product", 
+   "content_type": 12
+  }
+ }, 
+ {
+  "pk": 31, 
+  "model": "auth.permission", 
+  "fields": {
+   "codename": "add_productauditlogentry", 
+   "name": "Can add product audit log entry", 
+   "content_type": 11
+  }
+ }, 
+ {
+  "pk": 32, 
+  "model": "auth.permission", 
+  "fields": {
+   "codename": "change_productauditlogentry", 
+   "name": "Can change product audit log entry", 
+   "content_type": 11
+  }
+ }, 
+ {
+  "pk": 33, 
+  "model": "auth.permission", 
+  "fields": {
+   "codename": "delete_productauditlogentry", 
+   "name": "Can delete product audit log entry", 
+   "content_type": 11
+  }
+ }, 
+ {
+  "pk": 28, 
+  "model": "auth.permission", 
+  "fields": {
+   "codename": "add_productcategory", 
+   "name": "Can add product category", 
+   "content_type": 10
+  }
+ }, 
+ {
+  "pk": 29, 
+  "model": "auth.permission", 
+  "fields": {
+   "codename": "change_productcategory", 
+   "name": "Can change product category", 
+   "content_type": 10
+  }
+ }, 
+ {
+  "pk": 30, 
+  "model": "auth.permission", 
+  "fields": {
+   "codename": "delete_productcategory", 
+   "name": "Can delete product category", 
+   "content_type": 10
+  }
+ }, 
+ {
+  "pk": 25, 
+  "model": "auth.permission", 
+  "fields": {
+   "codename": "add_productcategoryauditlogentry", 
+   "name": "Can add product category audit log entry", 
+   "content_type": 9
+  }
+ }, 
+ {
+  "pk": 26, 
+  "model": "auth.permission", 
+  "fields": {
+   "codename": "change_productcategoryauditlogentry", 
+   "name": "Can change product category audit log entry", 
+   "content_type": 9
+  }
+ }, 
+ {
+  "pk": 27, 
+  "model": "auth.permission", 
+  "fields": {
+   "codename": "delete_productcategoryauditlogentry", 
+   "name": "Can delete product category audit log entry", 
+   "content_type": 9
+  }
+ }, 
+ {
+  "pk": 40, 
+  "model": "auth.permission", 
+  "fields": {
+   "codename": "add_saleinvoice", 
+   "name": "Can add sale invoice", 
+   "content_type": 14
+  }
+ }, 
+ {
+  "pk": 41, 
+  "model": "auth.permission", 
+  "fields": {
+   "codename": "change_saleinvoice", 
+   "name": "Can change sale invoice", 
+   "content_type": 14
+  }
+ }, 
+ {
+  "pk": 42, 
+  "model": "auth.permission", 
+  "fields": {
+   "codename": "delete_saleinvoice", 
+   "name": "Can delete sale invoice", 
+   "content_type": 14
+  }
+ }, 
+ {
+  "pk": 37, 
+  "model": "auth.permission", 
+  "fields": {
+   "codename": "add_saleinvoiceauditlogentry", 
+   "name": "Can add sale invoice audit log entry", 
+   "content_type": 13
+  }
+ }, 
+ {
+  "pk": 38, 
+  "model": "auth.permission", 
+  "fields": {
+   "codename": "change_saleinvoiceauditlogentry", 
+   "name": "Can change sale invoice audit log entry", 
+   "content_type": 13
+  }
+ }, 
+ {
+  "pk": 39, 
+  "model": "auth.permission", 
+  "fields": {
+   "codename": "delete_saleinvoiceauditlogentry", 
+   "name": "Can delete sale invoice audit log entry", 
+   "content_type": 13
+  }
+ }, 
+ {
+  "pk": 46, 
+  "model": "auth.permission", 
+  "fields": {
+   "codename": "add_soldquantity", 
+   "name": "Can add sold quantity", 
+   "content_type": 16
+  }
+ }, 
+ {
+  "pk": 47, 
+  "model": "auth.permission", 
+  "fields": {
+   "codename": "change_soldquantity", 
+   "name": "Can change sold quantity", 
+   "content_type": 16
+  }
+ }, 
+ {
+  "pk": 48, 
+  "model": "auth.permission", 
+  "fields": {
+   "codename": "delete_soldquantity", 
+   "name": "Can delete sold quantity", 
+   "content_type": 16
+  }
+ }, 
+ {
+  "pk": 43, 
+  "model": "auth.permission", 
+  "fields": {
+   "codename": "add_soldquantityauditlogentry", 
+   "name": "Can add sold quantity audit log entry", 
+   "content_type": 15
+  }
+ }, 
+ {
+  "pk": 44, 
+  "model": "auth.permission", 
+  "fields": {
+   "codename": "change_soldquantityauditlogentry", 
+   "name": "Can change sold quantity audit log entry", 
+   "content_type": 15
+  }
+ }, 
+ {
+  "pk": 45, 
+  "model": "auth.permission", 
+  "fields": {
+   "codename": "delete_soldquantityauditlogentry", 
+   "name": "Can delete sold quantity audit log entry", 
+   "content_type": 15
+  }
+ }, 
+ {
+  "pk": 1, 
+  "model": "auth.user", 
+  "fields": {
+   "username": "admin", 
+   "first_name": "", 
+   "last_name": "", 
+   "is_active": true, 
+   "is_superuser": true, 
+   "is_staff": true, 
+   "last_login": "2010-10-06 08:10:27", 
+   "groups": [], 
+   "user_permissions": [], 
+   "password": "sha1$d4df0$11a19f97ac29be40f5af832df77e2267a5270198", 
+   "email": "admin@example.com", 
+   "date_joined": "2010-10-06 08:06:29"
+  }
+ }
+]

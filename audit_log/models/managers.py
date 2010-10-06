@@ -97,6 +97,9 @@ class AuditLog(object):
                     #have only one autofield.
                 
                     field.__class__ = models.IntegerField
+                
+                if field.primary_key:
+                    field.serialize = True
             
                 if field.primary_key or field.unique:
                     #unique fields of the original model
@@ -107,10 +110,13 @@ class AuditLog(object):
                     field.primary_key = False
                     field._unique = False
                     field.db_index = True
+                    
                 
                 if field.rel and field.rel.related_name:
                     field.rel.related_name = '_auditlog_%s' % field.rel.related_name
             
+
+                
                 fields[field.name] = field
             
         return fields
@@ -161,6 +167,7 @@ class AuditLog(object):
         """
         return {
             'ordering' : ('-action_date',),
+            'app_label' : model._meta.app_label,
         }
     
     def create_log_entry_model(self, model):

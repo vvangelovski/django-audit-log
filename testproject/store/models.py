@@ -29,6 +29,9 @@ class WarehouseEntry(models.Model):
     quantity = models.DecimalField(max_digits = 10, decimal_places = 2)
     
     audit_log = AuditLog()
+    
+    class Meta:
+        app_label = "warehouse"
 
 
 class SaleInvoice(models.Model):
