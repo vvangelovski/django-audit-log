@@ -1,9 +1,11 @@
-import ez_setup
-ez_setup.use_setuptools()
-from setuptools import setup
+try:
+    from setuptools import setup
+except ImportError:
+    from distutils.core import setup
+    
 setup(
     name = 'django-audit-log',
-    version = '0.2',
+    version = '0.2.1',
     packages = ['audit_log', 'audit_log.models'],
     author = 'Vasil Vangelovski',
     author_email = 'vvangelovski@gmail.com',
