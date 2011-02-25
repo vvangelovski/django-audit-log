@@ -53,3 +53,12 @@ class SoldQuantity(models.Model):
     
     def __unicode__(self):
         return "%s X %s"%(self.product.name, self.quantity)
+
+
+class Widget(models.Model):
+    name = models.CharField(max_length = 100)
+
+class ExtremeWidget(Widget):
+    special_power = models.CharField(max_length = 100)
+    
+    audit_log = AuditLog()

@@ -1,5 +1,14 @@
 from django.test import TestCase
-from testproject.store.models import Product, WarehouseEntry
+from testproject.store.models import Product, WarehouseEntry, ProductCategory, ExtremeWidget
+from django.test.client import Client
+
+def _setup_admin():
+    from django.contrib.auth.models import User
+    User.objects.all().delete()
+    admin = User(username = "admin", is_staff = True, is_superuser = True)
+    admin.set_password("admin")
+    admin.save()
+    
 
 class EntryManagerSelectTest(TestCase):
     fixtures = ['test_data.json']
@@ -21,3 +30,39 @@ class LogEntryMetaOptionsTest(TestCase):
     def test_table_name(self):
         self.failUnlessEqual(Product.audit_log.model._meta.db_table, "%sauditlogentry"%Product._meta.db_table)
         self.failUnlessEqual(WarehouseEntry.audit_log.model._meta.db_table, "%sauditlogentry"%WarehouseEntry._meta.db_table)
+
+
+class SimpleLoggingTest(TestCase):
+    
+    def test_logging_single(self):
+        _setup_admin()
+        c = Client()
+        c.login(username = "admin", password = "admin")
+        c.post('/admin/store/productcategory/add/', {'name': 'Test Category', 'description': 'Test description'})
+        self.failUnlessEqual(ProductCategory.objects.all().count(), 1)
+        category = ProductCategory.objects.all()[0]
+        self.failUnlessEqual(category.audit_log.all()[0].name, category.name)
+        self.failUnlessEqual(category.audit_log.all()[0].description, category.description)
+        self.failUnlessEqual(category.audit_log.all()[0].action_type, "I")
+        self.failUnlessEqual(category.audit_log.all()[0].action_user.username, "admin")
+        c.post('/admin/store/productcategory/%s/'%category.pk, {'name': 'Test Category new name', 'description': 'Test description'})
+        category = ProductCategory.objects.get(pk = "Test Category new name")
+        self.failUnlessEqual(category.audit_log.all().count(), 1)
+        self.failUnlessEqual(category.audit_log.all()[0].name, "Test Category new name")
+        self.failUnlessEqual(category.audit_log.all()[0].action_type, "I")
+        c.post('/admin/store/productcategory/%s/'%category.pk, {'name': 'Test Category new name', 'description': 'Test modified description'})
+        category = ProductCategory.objects.get(pk = "Test Category new name")
+        self.failUnlessEqual(category.audit_log.all().count(), 2)
+        self.failUnlessEqual(category.audit_log.all()[0].description, "Test modified description")
+        self.failUnlessEqual(category.audit_log.all()[0].action_type, "U")
+        
+    def test_logging_inherited(self):
+        _setup_admin()
+        c = Client()
+        c.login(username = "admin", password = "admin")
+        c.post('/admin/store/extremewidget/add/', {'name': 'Test name', 'special_power': 'Testpower'})
+        widget = ExtremeWidget.objects.all()[0]
+        self.failUnlessEqual(widget.audit_log.all()[0].name, 'Test name')
+        self.failUnlessEqual(hasattr(widget.audit_log.all()[0], 'special_power'), True)
+        self.failUnlessEqual(widget.audit_log.all()[0].special_power, "Testpower")
+        
