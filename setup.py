@@ -1,6 +1,7 @@
-import os
+import os, sys
 from setuptools import setup, find_packages
 
+import audit_log
 from audit_log import VERSION, __version__
 
 if VERSION[-1] == 'final':
@@ -9,7 +10,13 @@ elif 'beta' in VERSION[-1]:
     STATUS = ['Development Status :: 4 - Beta']
 else:
     STATUS = ['Development Status :: 3 - Alpha']
-    
+
+def get_readme():
+    try:
+        return  open(os.path.join(os.path.dirname(__file__), 'README.rst')).read()
+    except IOError:
+        return ''
+
 setup(
     name = 'django-audit-log',
     version = __version__,
@@ -18,10 +25,11 @@ setup(
     author_email = 'vvangelovski@gmail.com',
     license = 'New BSD License (http://www.opensource.org/licenses/bsd-license.php)',
     description = 'Audit trail for django models',
-    long_description = open(os.path.join(os.path.dirname(__file__), 'README.rst')).read(),
+    long_description = get_readme(),
     url = 'https://github.com/Atomidata/django-audit-log',
     download_url = 'https://github.com/Atomidata/django-audit-log/downloads',
     include_package_data = True,
+    zip_safe = False,
     
     classifiers = STATUS + [
        'Environment :: Plugins',
