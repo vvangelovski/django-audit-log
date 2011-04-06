@@ -5,3 +5,5 @@ syntax: glob
 *~
 *.db
 *.egg-info
+build/*
+docs/_build/*
