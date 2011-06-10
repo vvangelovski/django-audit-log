@@ -13,9 +13,12 @@ class LogEntryObjectDescriptor(object):
         self.model = model
     
     def __get__(self, instance, owner):
-        values = (getattr(instance, f.attname) for f in self.model._meta.fields)
-        return self.model(*values)
-
+        kwargs = dict((f.attname, getattr(instance, f.attname))
+                    for f in self.model._meta.fields
+                    if hasattr(instance, f.attname))
+        return self.model(**kwargs)
+        
+      
 class AuditLogManager(models.Manager):
     def __init__(self, model, instance = None):
         super(AuditLogManager, self).__init__()
