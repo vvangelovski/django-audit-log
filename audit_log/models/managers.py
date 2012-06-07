@@ -1,9 +1,12 @@
 import copy
-import datetime
 from django.db import models
 from django.utils.functional import curry
 from django.utils.translation import ugettext_lazy as _
 
+try:
+    from django.utils import timezone as datetime
+except ImportError:
+    from datetime import datetime
 
 
 from audit_log.models.fields import LastUserField
@@ -151,7 +154,7 @@ class AuditLog(object):
         
         return {
             'action_id' : models.AutoField(primary_key = True),
-            'action_date' : models.DateTimeField(default = datetime.datetime.now),
+            'action_date' : models.DateTimeField(default = datetime.now),
             'action_user' : LastUserField(related_name = rel_name),
             'action_type' : models.CharField(max_length = 1, choices = (
                 ('I', _('Created')),
