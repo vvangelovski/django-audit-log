@@ -8,8 +8,8 @@ class LastUserField(models.ForeignKey):
     of a model. None will be the value for AnonymousUser.
     """
     
-    def __init__(self, **kwargs):
-        super(LastUserField, self).__init__(User, null = True, **kwargs)
+    def __init__(self, to = User, null = True,  **kwargs):
+        super(LastUserField, self).__init__(to = to, null = null, **kwargs)
     
     def contribute_to_class(self, cls, name):
         super(LastUserField, self).contribute_to_class(cls, name)
