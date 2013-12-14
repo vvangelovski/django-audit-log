@@ -15,3 +15,18 @@ class LastUserField(models.ForeignKey):
         super(LastUserField, self).contribute_to_class(cls, name)
         registry = registration.FieldRegistry(self.__class__)
         registry.add_field(cls, self)
+        
+        
+rules = [((fields.LastUserField,),
+    [],    
+    {   
+        'to': ['rel.to', {'default': User}],
+        'null': ['null', {'default': True}],
+    },)]
+
+try:
+    from south.modelsinspector import add_introspection_rules
+    # Add the rules for the `LastUserField`
+    add_introspection_rules(rules, ['^audit_log\.models\.fields\.LastUserField'])
+except ImportError:
+    pass
