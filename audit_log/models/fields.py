@@ -17,7 +17,7 @@ class LastUserField(models.ForeignKey):
         registry.add_field(cls, self)
         
         
-rules = [((fields.LastUserField,),
+rules = [((LastUserField,),
     [],    
     {   
         'to': ['rel.to', {'default': User}],
