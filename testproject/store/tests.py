@@ -33,7 +33,7 @@ class TrackingFieldsTest(TestCase):
         self.assertEqual(product.productrating_set.all().count(), 0)
         c = Client()
         c.login(username = "admin", password = "admin")
-        c.post('/rate/1', {'rating': 4})
+        c.post('/rate/1/', {'rating': 4})
         self.assertEqual(product.productrating_set.all().count(), 1)
         self.assertEqual(product.productrating_set.all()[0].user.username, "admin")
     
@@ -43,9 +43,10 @@ class TrackingFieldsTest(TestCase):
         self.assertEqual(product.productrating_set.all().count(), 0)
         c = Client()
         c.login(username = "admin", password = "admin")
+        c.get('/rate/1/',)
         key = c.session.session_key
-
-        c.post('/rate/1', {'rating': 4})
+        resp = c.post('/rate/1/', {'rating': 4})
+        self.assertEqual(resp.status_code, 200)
         self.assertEqual(product.productrating_set.all().count(), 1)
         self.assertIsNotNone(product.productrating_set.all()[0].session)
         self.assertEqual(product.productrating_set.all()[0].session, key)
@@ -68,7 +69,7 @@ class TrackingFieldsTest(TestCase):
         product = Product.objects.get(pk = 1)
         self.assertEqual(product.productrating_set.all().count(), 0)
         c = Client()
-        c.post('/rate/1', {'rating': 4})
+        c.post('/rate/1/', {'rating': 4})
         self.assertEqual(product.productrating_set.all().count(), 1)
         self.assertEqual(product.productrating_set.all()[0].user, None)
 
