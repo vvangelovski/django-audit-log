@@ -5,7 +5,6 @@ from django.utils.functional import curry
 from django.utils.translation import ugettext_lazy as _
 
 
-
 from audit_log.models.fields import LastUserField
 
 class LogEntryObjectDescriptor(object):
@@ -132,7 +131,8 @@ class AuditLog(object):
         keeping the acutal audit log entries.
         """
         rel_name = '_%s_audit_log_entry'%model._meta.object_name.lower()
-        
+      
+
         def entry_instance_to_unicode(log_entry):
             try:
                 result = u'%s: %s %s at %s'%(model._meta.object_name, 
@@ -151,7 +151,7 @@ class AuditLog(object):
         
         return {
             'action_id' : models.AutoField(primary_key = True),
-            'action_date' : models.DateTimeField(default = datetime.datetime.now),
+            'action_date' : models.DateTimeField(auto_now_add=True, blank=False),
             'action_user' : LastUserField(related_name = rel_name),
             'action_type' : models.CharField(max_length = 1, choices = (
                 ('I', _('Created')),

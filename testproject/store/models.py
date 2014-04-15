@@ -1,5 +1,5 @@
 from django.db import models
-from audit_log.models.fields import LastUserField
+from audit_log.models.fields import LastUserField, LastSessionKeyField
 from audit_log.models.managers import AuditLog
 import datetime
 
@@ -23,6 +23,12 @@ class Product(models.Model):
     
     def __unicode__(self):
         return self.name
+
+class ProductRating(models.Model):
+    user = LastUserField()
+    session = LastSessionKeyField()
+    product = models.ForeignKey(Product)
+    rating = models.PositiveIntegerField()
 
 class WarehouseEntry(models.Model):
     product = models.ForeignKey(Product)

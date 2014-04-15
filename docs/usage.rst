@@ -4,7 +4,7 @@ Usage
 Tracking changes on a model
 ----------------------------
 
-In order to enable change tracking on a model, the models needs to have a 
+In order to enable change tracking on a model, the model needs to have a 
 property of type ``audit_log.models.managers.AuditLog`` attached::
 
 

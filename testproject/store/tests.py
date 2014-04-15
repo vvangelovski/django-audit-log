@@ -10,16 +10,6 @@ def _setup_admin():
     admin.save()
     
 
-class EntryManagerSelectTest(TestCase):
-    fixtures = ['test_data.json']
-    
-    def test_model_level_select(self):
-        self.failUnlessEqual(Product.audit_log.all().count(), 10)
-        
-    def test_instance_level_select(self):
-        self.failUnlessEqual(Product.objects.get(pk = 4).audit_log.all().count(), 3)
-        self.failUnlessEqual(Product.objects.get(pk = 1).audit_log.all().count(), 2)
-        
 
 class LogEntryMetaOptionsTest(TestCase):
     
@@ -31,6 +21,56 @@ class LogEntryMetaOptionsTest(TestCase):
         self.failUnlessEqual(Product.audit_log.model._meta.db_table, "%sauditlogentry"%Product._meta.db_table)
         self.failUnlessEqual(WarehouseEntry.audit_log.model._meta.db_table, "%sauditlogentry"%WarehouseEntry._meta.db_table)
 
+class TrackingFieldsTest(TestCase):
+    def setUp(self):
+        category  = ProductCategory.objects.create(name = "gadgets", description = "gadgetry")
+        category.product_set.create(name = "new gadget", description = "best gadget eva", price = 100)
+
+
+    def test_logging_user(self):
+        _setup_admin()
+        product = Product.objects.get(pk = 1)
+        self.assertEqual(product.productrating_set.all().count(), 0)
+        c = Client()
+        c.login(username = "admin", password = "admin")
+        c.post('/rate/1', {'rating': 4})
+        self.assertEqual(product.productrating_set.all().count(), 1)
+        self.assertEqual(product.productrating_set.all()[0].user.username, "admin")
+    
+    def test_logging_session(self):
+        _setup_admin()
+        product = Product.objects.get(pk = 1)
+        self.assertEqual(product.productrating_set.all().count(), 0)
+        c = Client()
+        c.login(username = "admin", password = "admin")
+        key = c.session.session_key
+
+        c.post('/rate/1', {'rating': 4})
+        self.assertEqual(product.productrating_set.all().count(), 1)
+        self.assertIsNotNone(product.productrating_set.all()[0].session)
+        self.assertEqual(product.productrating_set.all()[0].session, key)
+
+    def test_logging_anon_session(self):
+        pass
+        #TODO need to find a way to test this
+        #product = Product.objects.get(pk = 1)
+        #self.assertEqual(product.productrating_set.all().count(), 0)
+        #c = Client()
+        #resp = c.get('/')
+        #self.assert_(hasattr(resp, "session"))
+        #key = c.session.session_key
+        #c.post('/rate/1', {'rating': 4})
+        #self.assertEqual(product.productrating_set.all().count(), 1)
+        #self.assertIsNotNone(product.productrating_set.all()[0].session)
+        #self.assertEqual(product.productrating_set.all()[0].session, key)
+
+    def test_logging_user_none(self):
+        product = Product.objects.get(pk = 1)
+        self.assertEqual(product.productrating_set.all().count(), 0)
+        c = Client()
+        c.post('/rate/1', {'rating': 4})
+        self.assertEqual(product.productrating_set.all().count(), 1)
+        self.assertEqual(product.productrating_set.all()[0].user, None)
 
 class LoggingTest(TestCase):
     

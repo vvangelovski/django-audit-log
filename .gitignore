@@ -1,0 +1,10 @@
+*.sqlite3
+*.db
+*.elc
+*.pyc
+*~
+*.db
+*.egg-info
+dist/*
+build/*
+docs/_build/*
