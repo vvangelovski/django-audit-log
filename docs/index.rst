@@ -12,7 +12,7 @@ Contents:
    :maxdepth: 2
    
    install
-   usage
+   change_tracking
 
 Indices and tables
 ==================
