@@ -6,6 +6,11 @@
 Welcome to django-audit-log's documentation!
 ============================================
 
+Adds support for tracking who changed what models through your Django application.
+
+* Tracking creators and modifiers of your model instances.
+* Tracking full model history.
+
 Contents:
 
 .. toctree::
