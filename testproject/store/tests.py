@@ -76,22 +76,7 @@ class TrackingFieldsTest(TestCase):
         self.assertEqual(product.productrating_set.all().count(), 1)
         self.assertEqual(product.productrating_set.all()[0].user, None)
 
-    def test_logging_creator(self):
-        _setup_admin()
-        c = Client()
-        c.login(username = "admin", password = "admin")
-        self.assertEqual(ProductCategory.objects.count(), 1)
-        resp =  c.post('/admin/store/productcategory/add/', {'name': 'Test-Category', 'description': 'Test description'})
-        self.assertEqual(resp.status_code, 302)
-        self.assertEqual(ProductCategory.objects.count(), 2)
-        self.assertEqual(ProductCategory.objects.order_by('-pk')[1].created_by.username, "admin")
-        pk = ProductCategory.objects.order_by('-pk')[1].pk
-        c.login(username = "admin1", password = "admin1")
-        resp =  c.post('/admin/store/productcategory/%s/'%pk, {'name': 'Name changed', 'description': 'Test description'})
-        self.assertEqual(resp.status_code, 302)
-        self.assertEqual(ProductCategory.objects.order_by('-pk')[1].name, "Name changed")
-        self.assertEqual(ProductCategory.objects.order_by('-pk')[1].created_by.username, "admin")
-        self.assertEqual(ProductCategory.objects.order_by('-pk')[1].modified_by.username, "admin1")
+
 
 class LoggingTest(TestCase):
     
