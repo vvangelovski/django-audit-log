@@ -2,38 +2,14 @@
 django-audit-log
 ============================
 
-Introduction
-============================
+Tracking changes to django models.
 
-What It Does
-----------------------------
+* Model fields for keeping track of the user and session that created and modified a model instance.
+* A model manager class that can automatically track all the changes made to a model in the database.
+* Support for Django 1.6, South migrations and custom User classes.
 
-Lets you keep track of who changed what
-model instance in you Django application. Full
-model structure is tracked and kept in a separate
-table similar in structure to the original model table.
+`The documentation can be found here <https://readthedocs.org/projects/django-audit-log/>`_ 
 
-Let's say a user logs in the admin and adds a Product model instance.
-The audit log will track this in a separate table with the exact structure of you
-Product table plus a reference to the user, the time of the action and type of action
-indicating it was an insert.
+**Version 0.3.0 onwards is tested with Django 1.6. It should work with older versions of Django, but may break things unexpectedly!**
 
-Next the user does an update of the same Product instance. The audit log table
-will keep the previous entry and another one will be added reflecting the change.
-
-When the user deletes the same model instance the audit log table will have an entry
-indicating this with the state of the model before it was deleted.
-
-	
-
-What It Doesn't Do
-----------------------------
-
-The audit log bootstraps itself on each POST, PUT or DELETE request. So it
-can only track changes to model instances when they are
-made via the web interface of your application. Note: issuing a delete in a PUT
-request will work without a problem (but don't do that). Saving
-model instances through the Django shell for instance won't
-reflect anything in the audit log. Neither will  direct INSERT, UPDATE or DELETE
-statements, either within a request lifecycle or directly in your database shell.
-
+*Note: This project was not maintained actively for a while. One of the reasons was that I wasn't receiving email notifications from GitHub. The other reason: We were using it just on a couple of projects that were frozen to old versions of Django. If you need any help with the project you can contact me by email directly if I don't respond to your github issues.*

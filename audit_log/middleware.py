@@ -30,7 +30,6 @@ class UserLoggingMiddleware(object):
         registry = registration.FieldRegistry(fields.LastUserField)
         if sender in registry:
             for field in registry.get_fields(sender):
-         
                 setattr(instance, field.name, user)
 
         registry = registration.FieldRegistry(fields.LastSessionKeyField)
@@ -41,8 +40,12 @@ class UserLoggingMiddleware(object):
         registry = registration.FieldRegistry(fields.CreatingUserField)
         if sender in registry:
             for field in registry.get_fields(sender):
-            
                 if getattr(instance, field.name) is None:
-
                     setattr(instance, field.name, user)
-                
+        
+        registry = registration.FieldRegistry(fields.CreatingSessionKeyField)
+        if sender in registry:
+            for field in registry.get_fields(sender):
+                if getattr(instance, field.name) is None:
+                    setattr(instance, field.name, session)
+        

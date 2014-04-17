@@ -1,6 +1,21 @@
 Tracking changes on a model
 ==================
 
+Tracking who created a model instance
+----------------------------------------
+
+You can track user information when model instances get created. For example::
+
+    from audit_log.models.fields import CreatingUserField, CreatingSessionKeyField
+
+    class ProductCategory(models.Model):
+        created_by = CreatingUserField()
+        created_session_key = CreatingSessionKeyField()
+        name = models.CharField(max_length=15)
+
+This is useful for tracking owners of model objects within your app.
+
+
 Tracking who made changes to a model
 ----------------------------------------
 
@@ -29,7 +44,6 @@ Anytime someone makes changes to the ``ProductRating`` model through the web int
 the reference to the user that made the change will be stored in the user field and 
 the session key will be stored in the session field.
 
-This can be useful for tracking owners of models for instance.
 
 
 Tracking full model history

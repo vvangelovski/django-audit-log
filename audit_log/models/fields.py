@@ -39,3 +39,12 @@ class CreatingUserField(LastUserField):
     #dont actually need to do anything, everything is handled by the parent class
     #the different logic goes in the middleware
     pass
+
+class CreatingSessionKeyField(LastSessionKeyField):
+    """
+    A field that keeps track of the last session key with which a model instance was created.
+    This will only be set once upon an INSERT in the database.
+    """
+    #dont actually need to do anything, everything is handled by the parent class
+    #the different logic goes in the middleware
+    pass
