@@ -115,3 +115,16 @@ instance and will have the following fields that are of relevance:
     * ``action_user`` - The user that performed the logged action.
     * ``action_type`` - The type of the action (Created/Changed/Deleted)
     * Any field of the original ``X`` model that is tracked by the audit log.
+
+
+M2M Relations
+--------------------
+
+Tracking changes on M2M Relations doesn't work for now. If you really need to track changes on M2M relations with
+this package explicitly define the table with another model instead of declaring the M2M relation.
+
+Abstract Base Models
+--------------------------
+
+For now just attaching the ``AuditLog`` manager to an abstract base model won't make it automagically attach itself on the child
+models. Just attach it to every child separately.
