@@ -13,27 +13,36 @@ class UserLoggingMiddleware(object):
                 user = None
             
             session = request.session.session_key
+       
 
+            update_pre_save_info = curry(self._update_pre_save_info, user, session)
 
-            update_tracking_info = curry(self.update_tracking_info, user, session)
-            
-            signals.pre_save.connect(update_tracking_info,  dispatch_uid = (self.__class__, request,), weak = False)
-            
+            signals.pre_save.connect(update_pre_save_info,  dispatch_uid = (self.__class__, request,), weak = False)
+
     
     def process_response(self, request, response):
         signals.pre_save.disconnect(dispatch_uid =  (self.__class__, request,))
         return response
     
 
-    def update_tracking_info(self, user, session, sender, instance, **kwargs):
-
+    def _update_pre_save_info(self, user, session, sender, instance, **kwargs):
+        
         registry = registration.FieldRegistry(fields.LastUserField)
         if sender in registry:
             for field in registry.get_fields(sender):
+         
                 setattr(instance, field.name, user)
 
         registry = registration.FieldRegistry(fields.LastSessionKeyField)
         if sender in registry:
             for field in registry.get_fields(sender):
                 setattr(instance, field.name, session)
-    
+
+        registry = registration.FieldRegistry(fields.CreatingUserField)
+        if sender in registry:
+            for field in registry.get_fields(sender):
+            
+                if getattr(instance, field.name) is None:
+
+                    setattr(instance, field.name, user)
+                

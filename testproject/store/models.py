@@ -1,9 +1,11 @@
 from django.db import models
-from audit_log.models.fields import LastUserField, LastSessionKeyField
+from audit_log.models.fields import LastUserField, LastSessionKeyField, CreatingUserField
 from audit_log.models.managers import AuditLog
 import datetime
 
 class ProductCategory(models.Model):
+    created_by = CreatingUserField(related_name = "created_categories")
+    modified_by = LastUserField(related_name = "modified_categories")
     name = models.CharField(max_length=150, primary_key = True)
     description = models.TextField()
     
@@ -41,6 +43,7 @@ class WarehouseEntry(models.Model):
 
 
 class SaleInvoice(models.Model):
+
     date = models.DateTimeField(default = datetime.datetime.now)
 
     audit_log = AuditLog(exclude = ['date',])
