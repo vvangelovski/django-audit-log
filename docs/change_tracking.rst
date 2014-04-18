@@ -12,7 +12,7 @@ It has 4 fields used for tracking the user and the session key with which a mode
         quantity = models.DecimalField(max_digits = 10, decimal_places = 2)
 
 
-This will add 4 fields to the ``WarehouseEntry`` model.:
+This will add 4 fields to the ``WarehouseEntry`` model:
 
 * ``created_by`` - A foreign key to the user that created the model instance.
 * ``created_with_session_key`` - Stores the session key with which the model instance was first created.
@@ -30,6 +30,23 @@ The related names for the ``created_by`` and ``modified_by`` fields are ``create
 
 This was done to keep in line with Django's naming for the ``related_name``. If you want to change that or other things you can
 create your own abstract base class with the proviced fields. 
+
+This is very useful when used in conjuction with ``TimeStampedModel`` from ``django-extensions``::
+
+    from django_extensions.db.models import TimeStampedModel
+    from audit_log.models import AuthStampedModel
+
+        
+    class Invoice(TimeStampedModel, AuthStampedModel):
+        group = models.ForeignKey(InvoiceGroup, verbose_name = _("group"))
+        client = models.ForeignKey(ClientContact, verbose_name = _("client"))
+        currency = models.ForeignKey(Currency, verbose_name = _("currency"))
+        invoice_number = models.CharField(_("invoice number"), blank = False, max_length = 15)
+        date_issued = models.DateField(_("date issued"))
+        date_due = models.DateField(verbose_name = _("date due"))
+        comment = models.TextField(_("comment"), blank = True)
+        is_paid = models.BooleanField(_("is paid"), default = False)
+        date_paid = models.DateField(_("date paid"), blank = True, null = True)
 
 
 Tracking Who Created a Model
