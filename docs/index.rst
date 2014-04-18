@@ -18,6 +18,7 @@ Contents:
    
    install
    change_tracking
+   model_history
 
 Indices and tables
 ==================
