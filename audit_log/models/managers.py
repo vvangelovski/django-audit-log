@@ -71,7 +71,11 @@ class AuditLog(object):
         manager.create(action_type = action_type, **attrs)
     
     def post_save(self, instance, created, **kwargs):
-        self.create_log_entry(instance, created and 'I' or 'U')
+        #_audit_log_ignore_update gets attached right before a save on an instance
+        #gets performed in the middleware
+        #TODO I don't like how this is done
+        if not getattr(instance, "_audit_log_ignore_update", False) or created:
+            self.create_log_entry(instance, created and 'I' or 'U')
     
     
     def post_delete(self, instance, **kwargs):

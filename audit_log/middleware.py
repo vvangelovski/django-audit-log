@@ -16,12 +16,15 @@ class UserLoggingMiddleware(object):
        
 
             update_pre_save_info = curry(self._update_pre_save_info, user, session)
+            update_post_save_info = curry(self._update_post_save_info, user, session)
 
             signals.pre_save.connect(update_pre_save_info,  dispatch_uid = (self.__class__, request,), weak = False)
+            signals.post_save.connect(update_post_save_info,  dispatch_uid = (self.__class__, request,), weak = False)
 
     
     def process_response(self, request, response):
         signals.pre_save.disconnect(dispatch_uid =  (self.__class__, request,))
+        signals.post_save.disconnect(dispatch_uid =  (self.__class__, request,))
         return response
     
 
@@ -37,15 +40,21 @@ class UserLoggingMiddleware(object):
             for field in registry.get_fields(sender):
                 setattr(instance, field.name, session)
 
-        registry = registration.FieldRegistry(fields.CreatingUserField)
-        if sender in registry:
-            for field in registry.get_fields(sender):
-                if getattr(instance, field.name) is None:
+
+    def _update_post_save_info(self, user, session, sender, instance, created, **kwargs ):
+        if created:
+            registry = registration.FieldRegistry(fields.CreatingUserField)
+            if sender in registry:
+                for field in registry.get_fields(sender):
                     setattr(instance, field.name, user)
-        
-        registry = registration.FieldRegistry(fields.CreatingSessionKeyField)
-        if sender in registry:
-            for field in registry.get_fields(sender):
-                if getattr(instance, field.name) is None:
+                    setattr(instance, "_audit_log_ignore_update", True)
+                    instance.save()
+                    instance._audit_log_ignore_update = False
+            
+            registry = registration.FieldRegistry(fields.CreatingSessionKeyField)
+            if sender in registry:
+                for field in registry.get_fields(sender):
                     setattr(instance, field.name, session)
-        
+                    setattr(instance, "_audit_log_ignore_update", True)
+                    instance.save()
+                    instance._audit_log_ignore_update = False
