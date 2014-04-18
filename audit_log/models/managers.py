@@ -173,8 +173,8 @@ class AuditLog(object):
     
     def get_meta_options(self, model):
         """
-        Returns a dictionary of fileds that will be added to
-        the Meta inner class of the log entry model.
+        Returns a dictionary of Meta options for the
+        autdit log model.
         """
         return {
             'ordering' : ('-action_date',),
