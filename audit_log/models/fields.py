@@ -1,8 +1,8 @@
 from django.db import models
 from django.conf import settings
 
-
 from audit_log import registration
+
 
 class LastUserField(models.ForeignKey):
     """
