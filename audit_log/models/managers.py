@@ -32,12 +32,12 @@ class AuditLogManager(models.Manager):
         self.model = model
         self.instance = instance
     
-    def get_query_set(self):
+    def get_queryset(self):
         if self.instance is None:
-            return super(AuditLogManager, self).get_query_set()
+            return super(AuditLogManager, self).get_queryset()
         
         f = {self.instance._meta.pk.name : self.instance.pk}
-        return super(AuditLogManager, self).get_query_set().filter(**f)
+        return super(AuditLogManager, self).get_queryset().filter(**f)
     
             
 class AuditLogDescriptor(object):
