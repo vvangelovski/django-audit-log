@@ -1,17 +1,33 @@
 from django.test import TestCase
-from testproject.store.models import Product, WarehouseEntry, ProductCategory, ExtremeWidget, SaleInvoice
+from testproject.store.models import Product, WarehouseEntry, ProductCategory, ExtremeWidget, SaleInvoice, Employee
 from django.test.client import Client
 
-def _setup_admin():
+def __setup_admins():
     from django.contrib.auth.models import User
     User.objects.all().delete()
-    admin = User(username = "admin", is_staff = True, is_superuser = True)
+    admin = User(username = "admin@example.com", is_staff = True, is_superuser = True)
     admin.set_password("admin")
     admin.save()
-    admin = User(username = "admin1", is_staff = True, is_superuser = True)
+    admin = User(username = "admin1@example.com", is_staff = True, is_superuser = True)
     admin.set_password("admin1")
     admin.save()
-    
+
+def __setup_employees():
+    from store.models import Employee
+    Employee.objects.all().delete()
+    admin = Employee(email = "admin@example.com",)
+    admin.set_password("admin")
+    admin.save()
+    admin = Employee(email = "admin1@example.com",)
+    admin.set_password("admin1")
+    admin.save()
+
+def _setup_admin():
+    from django.conf import settings
+    if settings.AUTH_USER_MODEL =="store.Employee":
+        __setup_employees()
+    else:
+        __setup_admins()
 
 
 class LogEntryMetaOptionsTest(TestCase):
@@ -35,17 +51,17 @@ class TrackingFieldsTest(TestCase):
         product = Product.objects.get(pk = 1)
         self.assertEqual(product.productrating_set.all().count(), 0)
         c = Client()
-        c.login(username = "admin", password = "admin")
+        c.login(username = "admin@example.com", password = "admin")
         c.post('/rate/1/', {'rating': 4})
         self.assertEqual(product.productrating_set.all().count(), 1)
-        self.assertEqual(product.productrating_set.all()[0].user.username, "admin")
+        self.assertEqual(product.productrating_set.all()[0].user.username, "admin@example.com")
     
     def test_logging_session(self):
         _setup_admin()
         product = Product.objects.get(pk = 1)
         self.assertEqual(product.productrating_set.all().count(), 0)
         c = Client()
-        c.login(username = "admin", password = "admin")
+        c.login(username = "admin@example.com", password = "admin")
         c.get('/rate/1/',)
         key = c.session.session_key
         resp = c.post('/rate/1/', {'rating': 4})
@@ -82,7 +98,7 @@ class LoggingTest(TestCase):
     
     def setup_client(self):
         c = Client()
-        c.login(username = "admin", password = "admin")
+        c.login(username = "admin@example.com", password = "admin")
         return c
     
     def test_logging_insert_update(self):
@@ -94,7 +110,7 @@ class LoggingTest(TestCase):
         self.failUnlessEqual(category.audit_log.all()[0].name, category.name)
         self.failUnlessEqual(category.audit_log.all()[0].description, category.description)
         self.failUnlessEqual(category.audit_log.all()[0].action_type, "I")
-        self.failUnlessEqual(category.audit_log.all()[0].action_user.username, "admin")
+        self.failUnlessEqual(category.audit_log.all()[0].action_user.username, "admin@example.com")
     
         c.post('/admin/store/productcategory/%s/'%'Test Category', {'name': 'Test Category new name', 'description': 'Test description'})
         category = ProductCategory.objects.get(pk = "Test Category new name")
@@ -123,7 +139,7 @@ class LoggingTest(TestCase):
     def test_logging_inherited(self):
         _setup_admin()
         c = Client()
-        c.login(username = "admin", password = "admin")
+        c.login(username = "admin@example.com", password = "admin")
         c.post('/admin/store/extremewidget/add/', {'name': 'Test name', 'special_power': 'Testpower'})
         widget = ExtremeWidget.objects.all()[0]
         self.failUnlessEqual(widget.audit_log.all()[0].name, 'Test name')

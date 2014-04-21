@@ -1,7 +1,73 @@
 from django.db import models
+from django.contrib.auth.models import (
+    BaseUserManager, AbstractBaseUser
+)
+
 from audit_log.models.fields import LastUserField, LastSessionKeyField, CreatingUserField
 from audit_log.models.managers import AuditLog
+
 import datetime
+
+
+class EmployeeManager(BaseUserManager):
+    def create_user(self, email, password=None):
+  
+        if not email:
+            raise ValueError('Users must have an email address')
+
+        user = self.model(
+            email=EmployeeManager.normalize_email(email),
+        )
+
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, email, password):
+        u = self.create_user(email, password = password,)
+        u.save(using=self._db)
+        return u
+
+
+class Employee(AbstractBaseUser):
+    email = models.EmailField(
+                        verbose_name='email address',
+                        max_length=255, unique = True,
+                    )
+    USERNAME_FIELD = 'email'
+
+    objects = EmployeeManager()
+
+    @property
+    def is_active(self):
+        return True
+
+    @property
+    def is_superuser(self):
+        return True
+
+    @property
+    def is_staff(self):
+        return True
+
+    @property
+    def username(self):
+        return self.email
+
+    def get_full_name(self):
+        return self.email
+
+    def get_short_name(self):
+        return self.email
+
+    def __unicode__(self):
+        return self.email
+
+    def has_perm(self, perm, obj=None):
+        return True
+
+    def has_module_perms(self, app_label):
+        return True
 
 class ProductCategory(models.Model):
     created_by = CreatingUserField(related_name = "created_categories")
