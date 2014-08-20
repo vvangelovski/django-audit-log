@@ -57,7 +57,7 @@ You can track user information when model instances get created with the ``Creat
     from audit_log.models.fields import CreatingUserField, CreatingSessionKeyField
 
     class ProductCategory(models.Model):
-        created_by = CreatingUserField(realted_name = "created_categories")
+        created_by = CreatingUserField(related_name = "created_categories")
         created_with_session_key = CreatingSessionKeyField()
         name = models.CharField(max_length=15)
 
