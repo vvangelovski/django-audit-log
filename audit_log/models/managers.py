@@ -56,7 +56,7 @@ class AuditLog(object):
     
     def __init__(self, exclude = []):
         self._exclude = exclude
-    
+      
     def contribute_to_class(self, cls, name):
         self.manager_name = name
         models.signals.class_prepared.connect(self.finalize, sender = cls)
@@ -180,10 +180,14 @@ class AuditLog(object):
         Returns a dictionary of Meta options for the
         autdit log model.
         """
-        return {
+        result = {
             'ordering' : ('-action_date',),
             'app_label' : model._meta.app_label,
         }
+        from django.db.models.options import DEFAULT_NAMES
+        if 'default_permissions' in DEFAULT_NAMES:
+            result.update({'default_permissions': ()})
+        return result
     
     def create_log_entry_model(self, model):
         """
