@@ -1,5 +1,5 @@
 from django.contrib import admin
-from models import *
+from testproject.store.models import *
 
 class CategoryAdmin(admin.ModelAdmin):
     pass

@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 import copy
 import datetime
 from django.db import models
@@ -148,14 +150,14 @@ class AuditLog(object):
 
         def entry_instance_to_unicode(log_entry):
             try:
-                result = u'%s: %s %s at %s'%(model._meta.object_name, 
+                result = '%s: %s %s at %s'%(model._meta.object_name, 
                                                 log_entry.object_state, 
                                                 log_entry.get_action_type_display().lower(),
                                                 log_entry.action_date,
                                                 
                                                 )
             except AttributeError:
-                result = u'%s %s at %s'%(model._meta.object_name,
+                result = '%s %s at %s'%(model._meta.object_name,
                                                 log_entry.get_action_type_display().lower(),
                                                 log_entry.action_date
                                                 

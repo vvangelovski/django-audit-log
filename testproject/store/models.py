@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from django.db import models
 from django.contrib.auth.models import (
     BaseUserManager, AbstractBaseUser
@@ -60,7 +62,7 @@ class Employee(AbstractBaseUser):
     def get_short_name(self):
         return self.email
 
-    def __unicode__(self):
+    def __str__(self):
         return self.email
 
     def has_perm(self, perm, obj=None):
@@ -77,7 +79,7 @@ class ProductCategory(models.Model):
     
     audit_log = AuditLog()
     
-    def __unicode__(self):
+    def __str__(self):
         return self.name
     
 class Product(models.Model):
@@ -89,7 +91,7 @@ class Product(models.Model):
     audit_log = AuditLog()
     
     
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 class ProductRating(models.Model):
@@ -115,7 +117,7 @@ class SaleInvoice(models.Model):
     audit_log = AuditLog(exclude = ['date',])
     
     
-    def __unicode__(self):
+    def __str__(self):
         return str(self.date)
 
 class SoldQuantity(models.Model):
@@ -126,7 +128,7 @@ class SoldQuantity(models.Model):
     audit_log = AuditLog()
     
     
-    def __unicode__(self):
+    def __str__(self):
         return "%s X %s"%(self.product.name, self.quantity)
 
 
