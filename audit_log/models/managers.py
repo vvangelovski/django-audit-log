@@ -118,6 +118,12 @@ class AuditLog(object):
                 if field.primary_key:
                     field.serialize = True
 
+                #OneToOne fields should really be tracked
+                #as ForeignKey fields
+                if isinstance(field, models.OneToOneField):
+                    field.__class__ = models.ForeignKey
+
+
                 if field.primary_key or field.unique:
                     #unique fields of the original model
                     #can not be guaranteed to be unique
@@ -131,6 +137,9 @@ class AuditLog(object):
 
                 if field.rel and field.rel.related_name:
                     field.rel.related_name = '_auditlog_%s' % field.rel.related_name
+
+
+
 
 
 

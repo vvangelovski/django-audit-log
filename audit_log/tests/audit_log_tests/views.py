@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
 from django.template import Template, RequestContext
 from django.views import generic
-from .models import Product, ProductCategory, ExtremeWidget
+from .models import Product, ProductCategory, ExtremeWidget, Property, PropertyOwner
 
 
 def index(request):
@@ -51,5 +51,20 @@ class ProductDeleteView(generic.DeleteView):
 
 class ExtremeWidgetCreateView(generic.CreateView):
     model = ExtremeWidget
+    template_name = 'form.html'
+    success_url = '/'
+
+class PropertyOwnerCreateView(generic.CreateView):
+    model = PropertyOwner
+    template_name = 'form.html'
+    success_url = '/'
+
+class PropertyCreateView(generic.CreateView):
+    model = Property
+    template_name = 'form.html'
+    success_url = '/'
+
+class PropertyUpdateView(generic.UpdateView):
+    model = Property
     template_name = 'form.html'
     success_url = '/'

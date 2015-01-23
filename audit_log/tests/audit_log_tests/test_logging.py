@@ -1,7 +1,10 @@
 from django.test import TestCase
-from .models import Product, WarehouseEntry, ProductCategory, ExtremeWidget, SaleInvoice, Employee, ProductRating
+from django.db import models
+from .models import (Product, WarehouseEntry, ProductCategory, ExtremeWidget,
+                        SaleInvoice, Employee, ProductRating, Property, PropertyOwner)
 from .views import (index, rate_product, CategoryCreateView, ProductCreateView,
-                    ProductDeleteView, ProductUpdateView, ExtremeWidgetCreateView)
+                    ProductDeleteView, ProductUpdateView, ExtremeWidgetCreateView,
+                    PropertyOwnerCreateView, PropertyCreateView, PropertyUpdateView)
 from django.test.client import Client
 
 from django.conf.urls import patterns, include, url
@@ -18,6 +21,9 @@ urlpatterns = patterns('',
     url(r'^product/update/(?P<pk>\d+)/$', ProductUpdateView.as_view()),
     url(r'^product/delete/(?P<pk>\d+)/$', ProductDeleteView.as_view()),
     url(r'^extremewidget/create/$', ExtremeWidgetCreateView.as_view()),
+    url(r'^propertyowner/create/$', PropertyOwnerCreateView.as_view()),
+    url(r'^property/create/$', PropertyCreateView.as_view()),
+    url(r'^property/update/(?P<pk>\d+)/$', PropertyUpdateView.as_view()),
 
 )
 
@@ -192,3 +198,31 @@ class TrackingChangesTest(TestCase):
         self.failUnlessEqual(widget.audit_log.all()[0].name, 'Test name')
         self.failUnlessEqual(hasattr(widget.audit_log.all()[0], 'special_power'), True)
         self.failUnlessEqual(widget.audit_log.all()[0].special_power, "Testpower")
+
+class TestOneToOne(TestCase):
+    urls = __name__
+
+    def run_client(self, client):
+        client.post('/propertyowner/create/', {'name': 'John Dory'})
+        client.post('/propertyowner/create/', {'name': 'Jane Doe'})
+        client.post('/property/create/', {'name': 'Property1', 'owned_by': '1'})
+        client.post('/property/update/1/', {'name': 'Property2', 'owned_by': '2'})
+
+    def test_fields(self):
+        c = Client()
+        self.run_client(c)
+        owner = PropertyOwner.objects.get(pk = 1)
+        prop = Property.objects.get(pk = 1)
+        self.assertEqual(prop.audit_log.all()[0]._meta.get_field('owned_by').__class__, models.ForeignKey)
+
+    def test_logging(self):
+        c = Client()
+        self.run_client(c)
+        owner1 = PropertyOwner.objects.get(pk = 1)
+        owner2 = PropertyOwner.objects.get(pk = 2)
+        prop = Property.objects.get(pk = 1)
+        self.assertEqual(prop.audit_log.all().count(), 2)
+        self.assertEqual(prop.audit_log.all()[0].action_type, 'U')
+        self.assertEqual(prop.audit_log.all()[1].action_type, 'I')
+        self.assertEqual(prop.audit_log.all()[0].owned_by, owner2)
+        self.assertEqual(prop.audit_log.all()[1].owned_by, owner1)
