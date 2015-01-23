@@ -9,27 +9,24 @@ class UserLoggingMiddleware(object):
         if not request.method in ('GET', 'HEAD', 'OPTIONS', 'TRACE'):
             if hasattr(request, 'user') and request.user.is_authenticated():
                 user = request.user
+
             else:
                 user = None
-            
+
             session = request.session.session_key
-       
 
             update_pre_save_info = curry(self._update_pre_save_info, user, session)
             update_post_save_info = curry(self._update_post_save_info, user, session)
-
             signals.pre_save.connect(update_pre_save_info,  dispatch_uid = (self.__class__, request,), weak = False)
             signals.post_save.connect(update_post_save_info,  dispatch_uid = (self.__class__, request,), weak = False)
 
-    
     def process_response(self, request, response):
         signals.pre_save.disconnect(dispatch_uid =  (self.__class__, request,))
         signals.post_save.disconnect(dispatch_uid =  (self.__class__, request,))
         return response
-    
+
 
     def _update_pre_save_info(self, user, session, sender, instance, **kwargs):
-        
         registry = registration.FieldRegistry(fields.LastUserField)
         if sender in registry:
             for field in registry.get_fields(sender):
@@ -50,7 +47,7 @@ class UserLoggingMiddleware(object):
                     setattr(instance, "_audit_log_ignore_update", True)
                     instance.save()
                     instance._audit_log_ignore_update = False
-            
+
             registry = registration.FieldRegistry(fields.CreatingSessionKeyField)
             if sender in registry:
                 for field in registry.get_fields(sender):
