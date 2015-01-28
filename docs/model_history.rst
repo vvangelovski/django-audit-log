@@ -2,7 +2,7 @@
 Tracking full model history
 ===============================
 
-In order to enable historic tracking on a model, the model needs to have a 
+In order to enable historic tracking on a model, the model needs to have a
 property of type ``audit_log.models.managers.AuditLog`` attached::
 
 
@@ -10,12 +10,12 @@ property of type ``audit_log.models.managers.AuditLog`` attached::
     from audit_log.models.fields import LastUserField
     from audit_log.models.managers import AuditLog
 
-    
+
     class ProductCategory(models.Model):
         name = models.CharField(max_length=150, primary_key = True)
         description = models.TextField()
-       
-        audit_log = AuditLog() 
+
+        audit_log = AuditLog()
 
     class Product(models.Model):
         name = models.CharField(max_length = 150)
@@ -26,19 +26,19 @@ property of type ``audit_log.models.managers.AuditLog`` attached::
         audit_log = AuditLog()
 
 
-Each time you add an instance of AuditLog to any of your models you need to run 
-``python manage.py syncdb`` so that the database table that keeps the actual 
-audit log for the given model gets created.   
+Each time you add an instance of AuditLog to any of your models you need to run
+``python manage.py syncdb`` so that the database table that keeps the actual
+audit log for the given model gets created.
 
 
 Querying the audit log
 -------------------------------
 
-An instance of ``audit_log.models.managers.AuditLog`` will behave much like a 
-standard manager in your model. Assuming the above model 
-configuration you can go ahead and create/edit/delete instances of Product, 
+An instance of ``audit_log.models.managers.AuditLog`` will behave much like a
+standard manager in your model. Assuming the above model
+configuration you can go ahead and create/edit/delete instances of Product,
 to query all the changes that were made to the products table
-you would need to retrieve all the entries for the audit log for that 
+you would need to retrieve all the entries for the audit log for that
 particular model class::
 
     In [2]: Product.audit_log.all()
@@ -46,7 +46,7 @@ particular model class::
             <ProductAuditLogEntry: Product: My widget changed at 2011-02-25 06:04:24.898991>,
             <ProductAuditLogEntry: Product: My Gadget super changed at 2011-02-25 06:04:15.448934>,
             <ProductAuditLogEntry: Product: My Gadget changed at 2011-02-25 06:04:06.566589>,
-            <ProductAuditLogEntry: Product: My Gadget created at 2011-02-25 06:03:57.751222>, 
+            <ProductAuditLogEntry: Product: My Gadget created at 2011-02-25 06:03:57.751222>,
             <ProductAuditLogEntry: Product: My widget created at 2011-02-25 06:03:42.027220>]
 
 Accordingly you can get the changes made to a particular model instance like so::
@@ -58,7 +58,7 @@ Accordingly you can get the changes made to a particular model instance like so:
 
 Instances of ``AuditLog`` behave like django model managers and can be queried in the same fashion.
 
-The querysets yielded by ``AuditLog`` managers are querysets for models 
+The querysets yielded by ``AuditLog`` managers are querysets for models
 of type ``[X]AuditLogEntry``, where X is the tracked model class.
 An instance of ``XAuditLogEntry`` represents a log entry for a particular model
 instance and will have the following fields that are of relevance:
@@ -81,3 +81,16 @@ Abstract Base Models
 
 For now just attaching the ``AuditLog`` manager to an abstract base model won't make it automagically attach itself on the child
 models. Just attach it to every child separately.
+
+Disabling/Enabling Tracking on a Model Instance
+-------------------------------------------------
+There may be times when you want a certain ``save()`` or ``delete()`` on a model instance to be ignored by the audit log.
+To disable tracking on a model instance you simply call::
+
+    modelinstance.audit_log.disable_tracking()
+
+To re-enable it do::
+
+    modelinstance.audit_log.enable_tracking()
+
+Note that this only works on instances, trying to do that on a model class will raise an exception.

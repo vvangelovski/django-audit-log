@@ -29,14 +29,14 @@ The related names for the ``created_by`` and ``modified_by`` fields are ``create
     Out[6]: [<WarehouseEntry: WarehouseEntry object>]
 
 This was done to keep in line with Django's naming for the ``related_name``. If you want to change that or other things you can
-create your own abstract base class with the proviced fields. 
+create your own abstract base class with the proviced fields.
 
 This is very useful when used in conjuction with ``TimeStampedModel`` from ``django-extensions``::
 
     from django_extensions.db.models import TimeStampedModel
     from audit_log.models import AuthStampedModel
 
-        
+
     class Invoice(TimeStampedModel, AuthStampedModel):
         group = models.ForeignKey(InvoiceGroup, verbose_name = _("group"))
         client = models.ForeignKey(ClientContact, verbose_name = _("client"))
@@ -70,13 +70,13 @@ Tracking Who Made the Last Changes to a Model
 
     from django.db import models
     from audit_log.models.fields import LastUserField, LastSessionKeyField
-    
+
     class Product(models.Model):
         name = models.CharField(max_length = 150)
         description = models.TextField()
         price = models.DecimalField(max_digits = 10, decimal_places = 2)
         category = models.ForeignKey(ProductCategory)
-        
+
         def __unicode__(self):
             return self.name
 
@@ -87,7 +87,5 @@ Tracking Who Made the Last Changes to a Model
         rating = models.PositiveIntegerField()
 
 Anytime someone makes changes to the ``ProductRating`` model through the web interface
-the reference to the user that made the change will be stored in the user field and 
+the reference to the user that made the change will be stored in the user field and
 the session key will be stored in the session field.
-
-

@@ -3,6 +3,24 @@ from django.utils.functional import curry
 
 from audit_log import registration
 from audit_log.models import fields
+from audit_log.models.managers import AuditLogManager
+
+def _disable_audit_log_managers(instance):
+    for attr in dir(instance):
+        try:
+            if isinstance(getattr(instance, attr), AuditLogManager):
+                getattr(instance, attr).disable_tracking()
+        except AttributeError:
+            pass
+
+
+def _enable_audit_log_managers(instance):
+    for attr in dir(instance):
+        try:
+            if isinstance(getattr(instance, attr), AuditLogManager):
+                getattr(instance, attr).enable_tracking()
+        except AttributeError:
+            pass
 
 class UserLoggingMiddleware(object):
     def process_request(self, request):
@@ -44,14 +62,15 @@ class UserLoggingMiddleware(object):
             if sender in registry:
                 for field in registry.get_fields(sender):
                     setattr(instance, field.name, user)
-                    setattr(instance, "_audit_log_ignore_update", True)
+                    _disable_audit_log_managers(instance)
                     instance.save()
-                    instance._audit_log_ignore_update = False
+                    _enable_audit_log_managers(instance)
+
 
             registry = registration.FieldRegistry(fields.CreatingSessionKeyField)
             if sender in registry:
                 for field in registry.get_fields(sender):
                     setattr(instance, field.name, session)
-                    setattr(instance, "_audit_log_ignore_update", True)
+                    _disable_audit_log_managers(instance)
                     instance.save()
-                    instance._audit_log_ignore_update = False
+                    _enable_audit_log_managers(instance)

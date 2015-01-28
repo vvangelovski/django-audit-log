@@ -9,10 +9,11 @@ Tracking changes to django models.
 * Abstract model class with fields ``created_by`` and ``modified_by`` fields.
 * A model manager class that can automatically track changes made to a model in the database.
 * Support for Django 1.6 and 1.7, South migrations, Django 1.7 migrations and custom User classes.
+* Python 3 and 2.x support
 
-`The documentation can be found here <http://django-audit-log.readthedocs.org/en/latest/index.html>`_ 
+`The documentation can be found here <http://django-audit-log.readthedocs.org/en/latest/index.html>`_
 
-**Tracking full model history on M2M relations Is not supported yet.**
+**Tracking full model history on M2M relations is not supported yet.**
 **Version 0.3.0 onwards is tested with Django 1.6. It should work with older versions of Django, but may break things unexpectedly!**
 
 
@@ -60,12 +61,12 @@ If you want to track full model change history you need to attach an ``AuditLog`
     from audit_log.models.fields import LastUserField
     from audit_log.models.managers import AuditLog
 
-    
+
     class ProductCategory(models.Model):
         name = models.CharField(max_length=150, primary_key = True)
         description = models.TextField()
-       
-        audit_log = AuditLog() 
+
+        audit_log = AuditLog()
 
     class Product(models.Model):
         name = models.CharField(max_length = 150)
@@ -82,10 +83,10 @@ You can then query the audit log::
             <ProductAuditLogEntry: Product: My widget changed at 2011-02-25 06:04:24.898991>,
             <ProductAuditLogEntry: Product: My Gadget super changed at 2011-02-25 06:04:15.448934>,
             <ProductAuditLogEntry: Product: My Gadget changed at 2011-02-25 06:04:06.566589>,
-            <ProductAuditLogEntry: Product: My Gadget created at 2011-02-25 06:03:57.751222>, 
+            <ProductAuditLogEntry: Product: My Gadget created at 2011-02-25 06:03:57.751222>,
             <ProductAuditLogEntry: Product: My widget created at 2011-02-25 06:03:42.027220>]
 
-`The documentation can be found here <http://django-audit-log.readthedocs.org/en/latest/index.html>`_ 
+`The documentation can be found here <http://django-audit-log.readthedocs.org/en/latest/index.html>`_
 
 
 *Note: This project was not maintained actively for a while. One of the reasons was that I wasn't receiving email notifications from GitHub. The other reason: We were using it just on a couple of projects that were frozen to old versions of Django. If you need any help with the project you can contact me by email directly if I don't respond to your GitHub issues. Feel free to nudge me over email if you have a patch for something. You can find my email in the AUTHORS file.*

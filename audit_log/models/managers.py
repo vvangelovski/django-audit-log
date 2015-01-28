@@ -22,6 +22,7 @@ class LogEntryObjectDescriptor(object):
     def __init__(self, model):
         self.model = model
 
+
     def __get__(self, instance, owner):
         kwargs = dict((f.attname, getattr(instance, f.attname))
                     for f in self.model._meta.fields
@@ -30,10 +31,34 @@ class LogEntryObjectDescriptor(object):
 
 
 class AuditLogManager(models.Manager):
-    def __init__(self, model, instance = None):
+    def __init__(self, model, attname, instance = None, ):
         super(AuditLogManager, self).__init__()
         self.model = model
         self.instance = instance
+        self.attname = attname
+        #set a hidden attribute on the  instance to control wether we should track changes
+        if instance is not None and not hasattr(instance, '__is_%s_enabled'%attname):
+            setattr(instance, '__is_%s_enabled'%attname, True)
+
+
+
+    def enable_tracking(self):
+        if self.instance is None:
+            raise ValueError("Tracking can only be enabled or disabled "
+                                    "per model instance, not on a model class")
+        setattr(self.instance, '__is_%s_enabled'%self.attname, True)
+
+    def disable_tracking(self):
+        if self.instance is None:
+            raise ValueError("Tracking can only be enabled or disabled "
+                                    "per model instance, not on a model class")
+        setattr(self.instance, '__is_%s_enabled'%self.attname, False)
+
+    def is_tracking_enabled(self):
+        if self.instance is None:
+            raise ValueError("Tracking can only be enabled or disabled "
+                                    "per model instance, not on a model class")
+        return getattr(self.instance, '__is_%s_enabled'%self.attname)
 
     def get_queryset(self):
         if self.instance is None:
@@ -44,14 +69,16 @@ class AuditLogManager(models.Manager):
 
 
 class AuditLogDescriptor(object):
-    def __init__(self, model, manager_class):
+    def __init__(self, model, manager_class, attname):
         self.model = model
-        self._manager_class = manager_class
+        self.manager_class = manager_class
+        self.attname = attname
 
     def __get__(self, instance, owner):
         if instance is None:
-            return self._manager_class(self.model)
-        return self._manager_class(self.model, instance)
+            return  self.manager_class(self.model, self.attname)
+        return self.manager_class(self.model, self.attname, instance)
+
 
 class AuditLog(object):
 
@@ -59,6 +86,7 @@ class AuditLog(object):
 
     def __init__(self, exclude = []):
         self._exclude = exclude
+
 
     def contribute_to_class(self, cls, name):
         self.manager_name = name
@@ -74,15 +102,15 @@ class AuditLog(object):
         manager.create(action_type = action_type, **attrs)
 
     def post_save(self, instance, created, **kwargs):
-        #_audit_log_ignore_update gets attached right before a save on an instance
-        #gets performed in the middleware
-        #TODO I don't like how this is done
-        if not getattr(instance, "_audit_log_ignore_update", False) or created:
+        #ignore if it is disabled
+        if getattr(instance, self.manager_name).is_tracking_enabled():
             self.create_log_entry(instance, created and 'I' or 'U')
 
 
     def post_delete(self, instance, **kwargs):
-        self.create_log_entry(instance,  'D')
+        #ignore if it is disabled
+        if getattr(instance, self.manager_name).is_tracking_enabled():
+            self.create_log_entry(instance,  'D')
 
 
     def finalize(self, sender, **kwargs):
@@ -91,7 +119,7 @@ class AuditLog(object):
         models.signals.post_save.connect(self.post_save, sender = sender, weak = False)
         models.signals.post_delete.connect(self.post_delete, sender = sender, weak = False)
 
-        descriptor = AuditLogDescriptor(log_entry_model, self.manager_class)
+        descriptor = AuditLogDescriptor(log_entry_model, self.manager_class, self.manager_name)
         setattr(sender, self.manager_name, descriptor)
 
     def copy_fields(self, model):
