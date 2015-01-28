@@ -1,3 +1,7 @@
+.. image:: https://readthedocs.org/projects/django-audit-log/badge/?version=latest
+   :target: https://readthedocs.org/projects/django-audit-log/?badge=latest
+   :alt: Documentation Status
+
 .. image:: https://badges.gitter.im/Join Chat.svg
    :target: https://gitter.im/Atomidata/django-audit-log?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
 
