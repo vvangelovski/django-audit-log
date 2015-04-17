@@ -1,7 +1,7 @@
 from django.db.models import signals
 from django.utils.functional import curry
 
-from audit_log import registration
+from audit_log import registration, settings
 from audit_log.models import fields
 from audit_log.models.managers import AuditLogManager
 
@@ -24,6 +24,8 @@ def _enable_audit_log_managers(instance):
 
 class UserLoggingMiddleware(object):
     def process_request(self, request):
+        if settings.DISABLE_AUDIT_LOG:
+            return
         if not request.method in ('GET', 'HEAD', 'OPTIONS', 'TRACE'):
             if hasattr(request, 'user') and request.user.is_authenticated():
                 user = request.user
@@ -39,6 +41,8 @@ class UserLoggingMiddleware(object):
             signals.post_save.connect(update_post_save_info,  dispatch_uid = (self.__class__, request,), weak = False)
 
     def process_response(self, request, response):
+        if settings.DISABLE_AUDIT_LOG:
+            return
         signals.pre_save.disconnect(dispatch_uid =  (self.__class__, request,))
         signals.post_save.disconnect(dispatch_uid =  (self.__class__, request,))
         return response
