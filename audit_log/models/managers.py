@@ -166,8 +166,8 @@ class AuditLog(object):
                     field.db_index = True
 
 
-                if field.rel and field.rel.related_name:
-                    field.rel.related_name = '_auditlog_%s' % field.rel.related_name
+                if field.rel and field.rel.get_accessor_name():
+                    field.rel.related_name = '_auditlog_%s' % field.rel.get_accessor_name()
 
 
 
