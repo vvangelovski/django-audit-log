@@ -22,12 +22,43 @@ def _enable_audit_log_managers(instance):
         except AttributeError:
             pass
 
+
+
+class JWTAuthMiddleware(object):
+
+
+    def get_user_jwt(self, request):
+        from rest_framework.request import Request
+        from django.utils.functional import SimpleLazyObject
+        from django.contrib.auth.middleware import get_user
+        from rest_framework_jwt.authentication import JSONWebTokenAuthentication
+        
+        user = get_user(request)
+        if user.is_authenticated():
+            return user
+        try:
+            user_jwt = JSONWebTokenAuthentication().authenticate(Request(request))
+            if user_jwt is not None:
+                return user_jwt[0]
+        except:
+            pass
+        return user
+
+    def process_request(self, request):
+        from django.utils.functional import SimpleLazyObject
+        assert hasattr(request, 'session'), "The Django authentication middleware requires session middleware to be installed. Edit your MIDDLEWARE_CLASSES setting to insert 'django.contrib.sessions.middleware.SessionMiddleware'."
+
+        request.user = SimpleLazyObject(lambda: self.get_user_jwt(request))
+
+
+
 class UserLoggingMiddleware(object):
     def process_request(self, request):
         if settings.DISABLE_AUDIT_LOG:
             return
         if not request.method in ('GET', 'HEAD', 'OPTIONS', 'TRACE'):
             if hasattr(request, 'user') and request.user.is_authenticated():
+
                 user = request.user
 
             else:
