@@ -33,16 +33,19 @@ class CategoryCreateView(generic.CreateView):
     model = ProductCategory
     template_name = 'form.html'
     success_url = '/'
+    fields = ['name', 'description']
 
 class ProductCreateView(generic.CreateView):
     model = Product
     template_name = 'form.html'
     success_url  = '/'
+    fields = ['name', 'description', 'price', 'category']
 
 class ProductUpdateView(generic.UpdateView):
     model = Product
     template_name = 'form.html'
     success_url = '/'
+    fields = ['name', 'description', 'price', 'category']
 
 class ProductDeleteView(generic.DeleteView):
     model = Product
@@ -53,18 +56,22 @@ class ExtremeWidgetCreateView(generic.CreateView):
     model = ExtremeWidget
     template_name = 'form.html'
     success_url = '/'
+    fields = ['name', 'special_power']
 
 class PropertyOwnerCreateView(generic.CreateView):
     model = PropertyOwner
     template_name = 'form.html'
     success_url = '/'
+    fields = ['name']
 
 class PropertyCreateView(generic.CreateView):
     model = Property
     template_name = 'form.html'
     success_url = '/'
+    fields = ['name', 'owned_by']
 
 class PropertyUpdateView(generic.UpdateView):
     model = Property
     template_name = 'form.html'
     success_url = '/'
+    fields = ['name', 'owned_by']
