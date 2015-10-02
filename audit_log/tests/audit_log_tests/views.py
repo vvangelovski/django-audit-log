@@ -3,7 +3,8 @@ from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
 from django.template import Template, RequestContext
 from django.views import generic
-from .models import Product, ProductCategory, ExtremeWidget, Property, PropertyOwner
+from .models import (Product, ProductCategory, Employee,
+                        ExtremeWidget, Property, PropertyOwner)
 
 
 def index(request):
@@ -75,3 +76,17 @@ class PropertyUpdateView(generic.UpdateView):
     template_name = 'form.html'
     success_url = '/'
     fields = ['name', 'owned_by']
+
+class EmployeeCreateView(generic.CreateView):
+    model = Employee
+    template_name = 'form.html'
+    success_url = '/'
+    #setting the password like this
+    # worn't work in reality bu it's ok for the test
+    fields = ['email', 'password']
+
+class EmployeeUpdateView(generic.UpdateView):
+    model = Employee
+    template_name = 'form.html'
+    success_url = '/'
+    fields = ['email']

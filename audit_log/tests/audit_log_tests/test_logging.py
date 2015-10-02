@@ -4,7 +4,8 @@ from .models import (Product, WarehouseEntry, ProductCategory, ExtremeWidget,
                         SaleInvoice, Employee, ProductRating, Property, PropertyOwner)
 from .views import (index, rate_product, CategoryCreateView, ProductCreateView,
                     ProductDeleteView, ProductUpdateView, ExtremeWidgetCreateView,
-                    PropertyOwnerCreateView, PropertyCreateView, PropertyUpdateView)
+                    PropertyOwnerCreateView, PropertyCreateView, PropertyUpdateView,
+                    EmployeeCreateView, EmployeeUpdateView)
 from django.test.client import Client
 
 from django.conf.urls import patterns, include, url
@@ -24,7 +25,8 @@ urlpatterns = patterns('',
     url(r'^propertyowner/create/$', PropertyOwnerCreateView.as_view()),
     url(r'^property/create/$', PropertyCreateView.as_view()),
     url(r'^property/update/(?P<pk>\d+)/$', PropertyUpdateView.as_view()),
-
+    url(r'^employee/create/$', EmployeeCreateView.as_view()),
+    url(r'^employee/update/(?P<pk>\d+)/$', EmployeeUpdateView.as_view()),
 )
 
 
@@ -198,6 +200,13 @@ class TrackingChangesTest(TestCase):
         self.failUnlessEqual(widget.audit_log.all()[0].name, 'Test name')
         self.failUnlessEqual(hasattr(widget.audit_log.all()[0], 'special_power'), True)
         self.failUnlessEqual(widget.audit_log.all()[0].special_power, "Testpower")
+
+    def test_logging_custom_user(self):
+        _setup_admin()
+        c = Client()
+        c.login(username = "admin@example.com", password = "admin")
+        c.post('/employee/create/', {'email': 'vvangelovski@gmail.com', 'password': 'testpass'})
+
 
 class TestOneToOne(TestCase):
     urls = __name__

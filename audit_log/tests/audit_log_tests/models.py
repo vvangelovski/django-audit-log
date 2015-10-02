@@ -39,6 +39,8 @@ class Employee(AbstractBaseUser):
     USERNAME_FIELD = 'email'
 
     objects = EmployeeManager()
+    audit_log = AuditLog()
+
 
     @property
     def is_active(self):
