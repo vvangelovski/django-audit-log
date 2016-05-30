@@ -45,6 +45,12 @@ class UserLoggingMiddleware(object):
         signals.post_save.disconnect(dispatch_uid =  (self.__class__, request,))
         return response
 
+    def process_exception(self, request, exception):
+        if settings.DISABLE_AUDIT_LOG:
+            return None
+        signals.pre_save.disconnect(dispatch_uid =  (self.__class__, request,))
+        signals.post_save.disconnect(dispatch_uid =  (self.__class__, request,))
+        return None
 
     def _update_pre_save_info(self, user, session, sender, instance, **kwargs):
         registry = registration.FieldRegistry(fields.LastUserField)
