@@ -1,19 +1,18 @@
 from __future__ import unicode_literals
 
-from django.db import models
+import datetime
+
 from django.contrib.auth.models import (
     BaseUserManager, AbstractBaseUser
 )
+from django.db import models
 
 from audit_log.models.fields import LastUserField, LastSessionKeyField, CreatingUserField
 from audit_log.models.managers import AuditLog
 
-import datetime
-
 
 class EmployeeManager(BaseUserManager):
     def create_user(self, email, password=None):
-
         if not email:
             raise ValueError('Users must have an email address')
 
@@ -26,21 +25,20 @@ class EmployeeManager(BaseUserManager):
         return user
 
     def create_superuser(self, email, password):
-        u = self.create_user(email, password = password,)
+        u = self.create_user(email, password=password, )
         u.save(using=self._db)
         return u
 
 
 class Employee(AbstractBaseUser):
     email = models.EmailField(
-                        verbose_name='email address',
-                        max_length=255, unique = True,
-                    )
+        verbose_name='email address',
+        max_length=255, unique=True,
+    )
     USERNAME_FIELD = 'email'
 
     objects = EmployeeManager()
     audit_log = AuditLog()
-
 
     @property
     def is_active(self):
@@ -73,10 +71,11 @@ class Employee(AbstractBaseUser):
     def has_module_perms(self, app_label):
         return True
 
+
 class ProductCategory(models.Model):
-    created_by = CreatingUserField(related_name = "created_categories")
-    modified_by = LastUserField(related_name = "modified_categories")
-    name = models.CharField(max_length=150, primary_key = True)
+    created_by = CreatingUserField(related_name="created_categories")
+    modified_by = LastUserField(related_name="modified_categories")
+    name = models.CharField(max_length=150, primary_key=True)
     description = models.TextField()
 
     audit_log = AuditLog()
@@ -84,17 +83,18 @@ class ProductCategory(models.Model):
     def __str__(self):
         return self.name
 
+
 class Product(models.Model):
-    name = models.CharField(max_length = 150)
+    name = models.CharField(max_length=150)
     description = models.TextField()
-    price = models.DecimalField(max_digits = 10, decimal_places = 2)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
     category = models.ForeignKey(ProductCategory)
 
     audit_log = AuditLog()
 
-
     def __str__(self):
         return self.name
+
 
 class ProductRating(models.Model):
     user = LastUserField()
@@ -102,9 +102,10 @@ class ProductRating(models.Model):
     product = models.ForeignKey(Product)
     rating = models.PositiveIntegerField()
 
+
 class WarehouseEntry(models.Model):
     product = models.ForeignKey(Product)
-    quantity = models.DecimalField(max_digits = 10, decimal_places = 2)
+    quantity = models.DecimalField(max_digits=10, decimal_places=2)
 
     audit_log = AuditLog()
 
@@ -113,41 +114,41 @@ class WarehouseEntry(models.Model):
 
 
 class SaleInvoice(models.Model):
+    date = models.DateTimeField(default=datetime.datetime.now)
 
-    date = models.DateTimeField(default = datetime.datetime.now)
-
-    audit_log = AuditLog(exclude = ['date',])
-
+    audit_log = AuditLog(exclude=['date', ])
 
     def __str__(self):
         return str(self.date)
 
+
 class SoldQuantity(models.Model):
     product = models.ForeignKey(Product)
-    quantity = models.DecimalField(max_digits = 10, decimal_places = 2)
+    quantity = models.DecimalField(max_digits=10, decimal_places=2)
     sale = models.ForeignKey(SaleInvoice)
 
     audit_log = AuditLog()
 
-
     def __str__(self):
-        return "%s X %s"%(self.product.name, self.quantity)
+        return "%s X %s" % (self.product.name, self.quantity)
 
 
 class Widget(models.Model):
-    name = models.CharField(max_length = 100)
+    name = models.CharField(max_length=100)
+
 
 class ExtremeWidget(Widget):
-    special_power = models.CharField(max_length = 100)
+    special_power = models.CharField(max_length=100)
 
     audit_log = AuditLog()
 
 
 class PropertyOwner(models.Model):
-    name = models.CharField(max_length = 100)
+    name = models.CharField(max_length=100)
+
 
 class Property(models.Model):
-    name = models.CharField(max_length = 100)
+    name = models.CharField(max_length=100)
     owned_by = models.OneToOneField(PropertyOwner)
 
     audit_log = AuditLog()

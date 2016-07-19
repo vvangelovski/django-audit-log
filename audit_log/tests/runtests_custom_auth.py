@@ -6,7 +6,6 @@ import django
 from django.conf import settings
 from django.core.management import execute_from_command_line
 
-
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 sys.path.append(os.path.abspath(os.path.join(BASE_DIR, '..')))
 
@@ -34,7 +33,6 @@ ALWAYS_MIDDLEWARE_CLASSES = (
     'audit_log.middleware.UserLoggingMiddleware',
 )
 
-
 settings.configure(
     SECRET_KEY="django_tests_secret_key",
     DEBUG=False,
@@ -60,13 +58,11 @@ settings.configure(
     ),
     FIXTURE_DIRS=glob.glob(BASE_DIR + '/' + '*/fixtures/'),
 
-    AUTH_USER_MODEL = "audit_log.Employee",
-    TEMPLATE_DIRS = (
+    AUTH_USER_MODEL="audit_log.Employee",
+    TEMPLATE_DIRS=(
         os.path.abspath(os.path.join(BASE_DIR, 'templates')),
     ),
-    )
-
-
+)
 
 django.setup()
 args = [sys.argv[0], 'test']
