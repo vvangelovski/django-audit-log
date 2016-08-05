@@ -19,7 +19,7 @@
 
 
 ============================
-django-audit-log-smaato
+django-audit-log
 ============================
 
 Tracking changes to django models.
