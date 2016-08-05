@@ -1,7 +1,6 @@
+from audit_log import registration
 from django.conf import settings
 from django.db import models
-
-from audit_log import registration
 
 
 class LastUserField(models.ForeignKey):
@@ -13,8 +12,19 @@ class LastUserField(models.ForeignKey):
     def __init__(self, to=getattr(settings, 'AUTH_USER_MODEL', 'auth.User'), null=True, editable=False, **kwargs):
         super(LastUserField, self).__init__(to=to, null=null, editable=editable, **kwargs)
 
-    def contribute_to_class(self, cls, name):
+    def contribute_to_class(self, cls, name, **kwargs):
         super(LastUserField, self).contribute_to_class(cls, name)
+        registry = registration.FieldRegistry(self.__class__)
+        registry.add_field(cls, self)
+
+
+class UserProfileField(models.ForeignKey):
+    def __init__(self, to=getattr(settings, 'AUDIT_LOG_API_AUTH_USER_MODEL', 'auth.User'), null=True,
+                 editable=False, **kwargs):
+        super(UserProfileField, self).__init__(to=to, null=null, editable=editable, **kwargs)
+
+    def contribute_to_class(self, cls, name, **kwargs):
+        super(UserProfileField, self).contribute_to_class(cls, name)
         registry = registration.FieldRegistry(self.__class__)
         registry.add_field(cls, self)
 
@@ -25,9 +35,9 @@ class LastSessionKeyField(models.CharField):
     """
 
     def __init__(self, max_length=40, null=True, editable=False, **kwargs):
-        super(LastSessionKeyField, self).__init__(max_length=40, null=null, editable=editable, **kwargs)
+        super(LastSessionKeyField, self).__init__(max_length=max_length, null=null, editable=editable, **kwargs)
 
-    def contribute_to_class(self, cls, name):
+    def contribute_to_class(self, cls, name, **kwargs):
         super(LastSessionKeyField, self).contribute_to_class(cls, name)
         registry = registration.FieldRegistry(self.__class__)
         registry.add_field(cls, self)

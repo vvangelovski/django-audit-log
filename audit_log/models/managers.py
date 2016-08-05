@@ -7,7 +7,7 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 from audit_log import settings as local_settings
-from audit_log.models.fields import LastUserField
+from audit_log.models.fields import LastUserField, UserProfileField
 
 try:
     from django.utils.timezone import now as datetime_now
@@ -193,6 +193,7 @@ class AuditLog(object):
             return result
 
         action_user_field = LastUserField(related_name=rel_name, editable=False)
+        action_userprofile_field = UserProfileField(related_name=rel_name, editable=False)
 
         # check if the manager has been attached to auth user model
         if [model._meta.app_label, model.__name__] == getattr(settings, 'AUTH_USER_MODEL', 'auth.User').split("."):
@@ -202,6 +203,7 @@ class AuditLog(object):
             'action_id': models.AutoField(primary_key=True),
             'action_date': models.DateTimeField(default=datetime_now, editable=False, blank=False),
             'action_user': action_user_field,
+            'action_userprofile': action_userprofile_field,
             'action_type': models.CharField(max_length=1, editable=False, choices=(
                 ('I', _('Created')),
                 ('U', _('Changed')),
