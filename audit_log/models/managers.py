@@ -233,6 +233,7 @@ class AuditLog(object):
         result = {
             'ordering' : ('-action_date',),
             'app_label' : model._meta.app_label,
+            'default_permissions': (),
         }
         from django.db.models.options import DEFAULT_NAMES
         if 'default_permissions' in DEFAULT_NAMES:
