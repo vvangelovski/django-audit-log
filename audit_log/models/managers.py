@@ -186,7 +186,8 @@ class AuditLog(object):
         Returns a dictionary mapping of the fields that are used for
         keeping the acutal audit log entries.
         """
-        rel_name = '_%s_audit_log_entry'%model._meta.object_name.lower()
+        rel_name = '_%s_%s_audit_log_entry' % (model._meta.app_label,
+                                               model._meta.object_name.lower())
 
 
         def entry_instance_to_unicode(log_entry):
