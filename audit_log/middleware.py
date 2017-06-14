@@ -1,4 +1,5 @@
 from django.db.models import signals
+from django.utils.deprecation import MiddlewareMixin
 from django.utils.functional import curry
 
 from audit_log import registration, settings
@@ -23,7 +24,7 @@ def _enable_audit_log_managers(instance):
             pass
 
 
-class UserLoggingMiddleware(object):
+class UserLoggingMiddleware(MiddlewareMixin):
     def process_request(self, request):
         if settings.DISABLE_AUDIT_LOG:
             return
@@ -87,7 +88,7 @@ class UserLoggingMiddleware(object):
 
 
 
-class JWTAuthMiddleware(object):
+class JWTAuthMiddleware(MiddlewareMixin):
     """
     Convenience middleware for users of django-rest-framework-jwt.
     Fixes issue https://github.com/GetBlimp/django-rest-framework-jwt/issues/45
