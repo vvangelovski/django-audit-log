@@ -94,3 +94,33 @@ To re-enable it do::
     modelinstance.audit_log.enable_tracking()
 
 Note that this only works on instances, trying to do that on a model class will raise an exception.
+
+Using in combination with ``django-modeltranslation``
+----------------------------------------------
+
+``django-modeltranslation`` is a package that allows you to add dynamic translation of model fields (`documentation`_). Behind the scenes ``django-modeltranslation`` automatically modifies your models by adding translation fields. To keep your tracking models created by ``django-audit-log`` matching your tracked models,  you have to remember to register the tracking models for translation as well as your tracked models. Here's an example:
+
+.. code:: python
+
+    from modeltranslation.translator import register, TranslationOptions
+
+    from my_app import models
+
+
+    @register(models.MyModel)
+    @register(models.MyModel.audit_log.model)
+    class MyModelTranslationOptions(TranslationOptions):
+        """Translation options for MyModel."""
+
+        fields = (
+            'text',
+            'title',
+        )
+
+If you forget to register your tracking models, you will get an error like:
+
+.. code::
+
+    TypeError: 'text_es' is an invalid keyword argument for this function
+
+.. _documentation: https://django-modeltranslation.readthedocs.io/en/latest/
