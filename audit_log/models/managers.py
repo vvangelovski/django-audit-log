@@ -167,14 +167,14 @@ class AuditLog(object):
 
 
                 if field.rel and field.rel.related_name:
-                    field.rel.related_name = '_auditlog_%s' % field.rel.related_name                
+                    field.rel.related_name = '_auditlog_%s' % field.rel.related_name
                 elif field.rel: 
                     try:
                         if field.rel.get_accessor_name():
                             field.rel.related_name = '_auditlog_%s' % field.rel.get_accessor_name()
                     except:
                         pass
-  
+
                 fields[field.name] = field
 
         return fields
