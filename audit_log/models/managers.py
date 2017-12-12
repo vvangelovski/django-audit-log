@@ -166,12 +166,12 @@ class AuditLog(object):
                     field.db_index = True
 
 
-                if field.rel and field.rel.related_name:
-                    field.rel.related_name = '_auditlog_%s' % field.rel.related_name
-                elif field.rel: 
+                if field.remote_field and field.remote_field.related_name:
+                    field.remote_field.related_name = '_auditlog_%s' % field.remote_field.related_name
+                elif field.remote_field:
                     try:
-                        if field.rel.get_accessor_name():
-                            field.rel.related_name = '_auditlog_%s' % field.rel.get_accessor_name()
+                        if field.remote_field.get_accessor_name():
+                            field.remote_field.related_name = '_auditlog_%s' % field.remote_field.get_accessor_name()
                     except:
                         pass
 
