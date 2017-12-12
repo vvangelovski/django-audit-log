@@ -167,13 +167,15 @@ class AuditLog(object):
 
 
                 if field.remote_field and field.remote_field.related_name:
-                    print('USING RELATED NAME')
                     field.remote_field.related_name = '_auditlog_%s' % field.remote_field.related_name
+                    print('USING RELATED NAME')
+                    print('for {} {}'.format(field, field.remote_field.related_name))
                 elif field.remote_field:
                     try:
                         if field.remote_field.get_accessor_name():
-                            print('USING ACCESSOR NAME')
                             field.remote_field.related_name = '_auditlog_%s' % field.remote_field.get_accessor_name()
+                            print('USING ACCESSOR NAME')
+                            print('for {} {}'.format(field, field.remote_field.related_name))
                     except e:
                         print('OH NO EXCEPTION')
                         print(e)
