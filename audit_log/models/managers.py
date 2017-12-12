@@ -171,8 +171,6 @@ class AuditLog(object):
                         model._meta.model_name,
                         field.remote_field.related_name
                     )
-                    print('USING RELATED NAME')
-                    print('for {} {}'.format(field, field.remote_field.related_name))
                 elif field.remote_field:
                     try:
                         if field.remote_field.get_accessor_name():
@@ -180,11 +178,7 @@ class AuditLog(object):
                                 model._meta.model_name,
                                 field.remote_field.get_accessor_name()
                             )
-                            print('USING ACCESSOR NAME')
-                            print('for {} {}'.format(field, field.remote_field.related_name))
                     except e:
-                        print('OH NO EXCEPTION')
-                        print(e)
                         pass
 
                 fields[field.name] = field
