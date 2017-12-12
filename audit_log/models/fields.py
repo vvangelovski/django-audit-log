@@ -10,8 +10,8 @@ class LastUserField(models.ForeignKey):
     of a model. None will be the value for AnonymousUser.
     """
 
-    def __init__(self, to=getattr(settings, 'AUTH_USER_MODEL', 'auth.User'), null=True, editable=False,  **kwargs):
-        super(LastUserField, self).__init__(to=to, null=null, editable=editable, **kwargs)
+    def __init__(self, to=getattr(settings, 'AUTH_USER_MODEL', 'auth.User'), on_delete=models.SET_NULL, null=True, editable=False,  **kwargs):
+        super(LastUserField, self).__init__(to=to, on_delete=on_delete, null=null, editable=editable, **kwargs)
 
     def contribute_to_class(self, cls, name):
         super(LastUserField, self).contribute_to_class(cls, name)
