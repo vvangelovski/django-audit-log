@@ -29,7 +29,7 @@ class UserLoggingMiddleware(MiddlewareMixin):
         if settings.DISABLE_AUDIT_LOG:
             return
         if not request.method in ('GET', 'HEAD', 'OPTIONS', 'TRACE'):
-            if hasattr(request, 'user') and request.user.is_authenticated():
+            if hasattr(request, 'user') and request.user.is_authenticated:
                 user = request.user
             else:
                 user = None
@@ -103,7 +103,7 @@ class JWTAuthMiddleware(MiddlewareMixin):
         from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
         user = get_user(request)
-        if user.is_authenticated():
+        if user.is_authenticated:
             return user
         try:
             user_jwt = JSONWebTokenAuthentication().authenticate(Request(request))
