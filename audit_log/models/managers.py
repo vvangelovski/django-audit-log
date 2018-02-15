@@ -165,15 +165,26 @@ class AuditLog(object):
                     field._unique = False
                     field.db_index = True
 
-
-                if field.rel and field.rel.related_name:
-                    field.rel.related_name = '_auditlog_%s' % field.rel.related_name                
-                elif field.rel: 
-                    try:
-                        if field.rel.get_accessor_name():
-                            field.rel.related_name = '_auditlog_%s' % field.rel.get_accessor_name()
-                    except:
-                        pass
+                if hasattr(field, 'rel'):
+                    # Django <= 1.9
+                    if field.rel and field.rel.related_name:
+                        field.rel.related_name = '_auditlog_%s' % field.rel.related_name
+                    elif field.rel:
+                        try:
+                            if field.rel.get_accessor_name():
+                                field.rel.related_name = '_auditlog_%s' % field.rel.get_accessor_name()
+                        except:
+                            pass
+                else:
+                    # Django 2.x
+                    if field.remote_field and field.remote_field.related_name:
+                        field.remote_field.related_name = '_auditlog_%s' % field.remote_field.related_name
+                    elif field.remote_field:
+                        try:
+                            if field.remote_field.get_accessor_name():
+                                field.remote_field.related_name = '_auditlog_%s' % field.remote_field.get_accessor_name()
+                        except:
+                            pass
   
                 fields[field.name] = field
 
