@@ -5,15 +5,15 @@
 .. image:: https://badges.gitter.im/Join Chat.svg
    :target: https://gitter.im/Atomidata/django-audit-log?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
 
-.. image:: https://pypip.in/version/django-audit-log/badge.svg
+.. image:: https://img.shields.io/pypi/v/django-audit-log.svg
     :target: https://pypi.python.org/pypi/django-audit-log/
     :alt: Latest Version
 
-.. image:: https://pypip.in/py_versions/django-audit-log/badge.svg
+.. image:: https://img.shields.io/pypi/pyversions/django-audit-log.svg
     :target: https://pypi.python.org/pypi/django-audit-log/
     :alt: Supported Python versions
 
-.. image:: https://pypip.in/format/django-audit-log/badge.svg
+.. image:: https://img.shields.io/pypi/format/django-audit-log.svg
     :target: https://pypi.python.org/pypi/django-audit-log/
     :alt: Download format
 
