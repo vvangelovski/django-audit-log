@@ -1,3 +1,4 @@
+from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import signals
 from django.utils.deprecation import MiddlewareMixin
 from django.utils.functional import curry
@@ -11,7 +12,7 @@ def _disable_audit_log_managers(instance):
         try:
             if isinstance(getattr(instance, attr), AuditLogManager):
                 getattr(instance, attr).disable_tracking()
-        except AttributeError:
+        except (AttributeError, ObjectDoesNotExist): # ObjectDoesNot exist raised with django-polymorphic child models
             pass
 
 
@@ -20,7 +21,7 @@ def _enable_audit_log_managers(instance):
         try:
             if isinstance(getattr(instance, attr), AuditLogManager):
                 getattr(instance, attr).enable_tracking()
-        except AttributeError:
+        except (AttributeError, ObjectDoesNotExist):
             pass
 
 
