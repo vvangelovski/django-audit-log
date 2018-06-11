@@ -1,6 +1,11 @@
 from django.db.models import signals
-from django.utils.deprecation import MiddlewareMixin
+#from django.utils.deprecation import MiddlewareMixin
 from django.utils.functional import curry
+
+try:
+    from django.utils.deprecation import MiddlewareMixin
+except ImportError:
+    MiddlewareMixin = object
 
 from audit_log import registration, settings
 from audit_log.models import fields
@@ -83,9 +88,6 @@ class UserLoggingMiddleware(MiddlewareMixin):
                     _disable_audit_log_managers(instance)
                     instance.save()
                     _enable_audit_log_managers(instance)
-
-
-
 
 
 class JWTAuthMiddleware(MiddlewareMixin):
