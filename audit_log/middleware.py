@@ -57,12 +57,14 @@ class UserLoggingMiddleware(MiddlewareMixin):
         registry = registration.FieldRegistry(fields.LastUserField)
         if sender in registry:
             for field in registry.get_fields(sender):
-                setattr(instance, field.name, user)
+                if not getattr(instance, field.name, None):
+                    setattr(instance, field.name, user)
 
         registry = registration.FieldRegistry(fields.LastSessionKeyField)
         if sender in registry:
             for field in registry.get_fields(sender):
-                setattr(instance, field.name, session)
+                if not getattr(instance, field.name, None):
+                    setattr(instance, field.name, session)
 
 
     def _update_post_save_info(self, user, session, sender, instance, created, **kwargs ):
