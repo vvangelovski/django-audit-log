@@ -57,13 +57,13 @@ class UserLoggingMiddleware(MiddlewareMixin):
         registry = registration.FieldRegistry(fields.LastUserField)
         if sender in registry:
             for field in registry.get_fields(sender):
-                if not getattr(instance, field.name, None):
+                if user:
                     setattr(instance, field.name, user)
 
         registry = registration.FieldRegistry(fields.LastSessionKeyField)
         if sender in registry:
             for field in registry.get_fields(sender):
-                if not getattr(instance, field.name, None):
+                if user:
                     setattr(instance, field.name, session)
 
 
