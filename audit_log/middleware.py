@@ -70,19 +70,21 @@ class UserLoggingMiddleware(MiddlewareMixin):
             registry = registration.FieldRegistry(fields.CreatingUserField)
             if sender in registry:
                 for field in registry.get_fields(sender):
-                    setattr(instance, field.name, user)
-                    _disable_audit_log_managers(instance)
-                    instance.save()
-                    _enable_audit_log_managers(instance)
+                    if not getattr(instance, field.name, None):
+                        setattr(instance, field.name, user)
+                        _disable_audit_log_managers(instance)
+                        instance.save()
+                        _enable_audit_log_managers(instance)
 
 
             registry = registration.FieldRegistry(fields.CreatingSessionKeyField)
             if sender in registry:
                 for field in registry.get_fields(sender):
-                    setattr(instance, field.name, session)
-                    _disable_audit_log_managers(instance)
-                    instance.save()
-                    _enable_audit_log_managers(instance)
+                    if not getattr(instance, field.name, None):
+                        setattr(instance, field.name, session)
+                        _disable_audit_log_managers(instance)
+                        instance.save()
+                        _enable_audit_log_managers(instance)
 
 
 
