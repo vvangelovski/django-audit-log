@@ -8,13 +8,14 @@ from .views import (index, rate_product, CategoryCreateView, ProductCreateView,
                     EmployeeCreateView, EmployeeUpdateView)
 from django.test.client import Client
 
-from django.conf.urls import patterns, include, url
+from django.conf.urls import url
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 admin.autodiscover()
 
-urlpatterns = patterns('',
+urlpatterns = [
+    '',
     url(r'^/$', index),
     url(r'^rate/(\d)/$', rate_product),
     url(r'^category/create/$', CategoryCreateView.as_view()),
@@ -27,7 +28,7 @@ urlpatterns = patterns('',
     url(r'^property/update/(?P<pk>\d+)/$', PropertyUpdateView.as_view()),
     url(r'^employee/create/$', EmployeeCreateView.as_view()),
     url(r'^employee/update/(?P<pk>\d+)/$', EmployeeUpdateView.as_view()),
-)
+]
 
 
 
@@ -82,26 +83,26 @@ class TrackingAuthFieldsTest(TestCase):
     def test_logging_user(self):
         _setup_admin()
         product = Product.objects.get(pk = 1)
-        self.assertEqual(product.productrating_set.all().count(), 0)
-        c = Client()
+        self.assertEqual(product.productrating_set.count(), 0)
+        c = self.client
         c.login(username = "admin@example.com", password = "admin")
         c.post('/rate/1/', {'rating': 4})
-        self.assertEqual(product.productrating_set.all().count(), 1)
-        self.assertEqual(product.productrating_set.all()[0].user.username, "admin@example.com")
+        self.assertEqual(product.productrating_set.count(), 1)
+        self.assertEqual(product.productrating_set.first().user.username, "admin@example.com")
 
     def test_logging_session(self):
         _setup_admin()
         product = Product.objects.get(pk = 1)
-        self.assertEqual(product.productrating_set.all().count(), 0)
-        c = Client()
+        self.assertEqual(product.productrating_set.count(), 0)
+        c = self.client
         c.login(username = "admin@example.com", password = "admin")
         c.get('/rate/1/',)
         key = c.session.session_key
         resp = c.post('/rate/1/', {'rating': 4})
         self.assertEqual(resp.status_code, 200)
-        self.assertEqual(product.productrating_set.all().count(), 1)
-        self.assertIsNotNone(product.productrating_set.all()[0].session)
-        self.assertEqual(product.productrating_set.all()[0].session, key)
+        self.assertEqual(product.productrating_set.count(), 1)
+        self.assertIsNotNone(product.productrating_set.first().session)
+        self.assertEqual(product.productrating_set.first().session, key)
 
     def test_logging_anon_session(self):
         pass
@@ -110,11 +111,11 @@ class TrackingAuthFieldsTest(TestCase):
 
     def test_logging_user_none(self):
         product = Product.objects.get(pk = 1)
-        self.assertEqual(product.productrating_set.all().count(), 0)
-        c = Client()
+        self.assertEqual(product.productrating_set.count(), 0)
+        c = self.client
         c.post('/rate/1/', {'rating': 4})
-        self.assertEqual(product.productrating_set.all().count(), 1)
-        self.assertEqual(product.productrating_set.all()[0].user, None)
+        self.assertEqual(product.productrating_set.count(), 1)
+        self.assertEqual(product.productrating_set.first().user, None)
 
 
 class TrackingChangesTest(TestCase):
@@ -128,82 +129,83 @@ class TrackingChangesTest(TestCase):
 
 
     def test_logging_insert_anon(self):
-        c = Client()
+        c = self.client
         self.run_client(c)
         category = ProductCategory.objects.get(name = 'Test Category')
-        self.assertEqual(category.audit_log.all()[0].name, category.name)
-        self.assertEqual(category.audit_log.all()[0].description, category.description)
-        self.assertEqual(category.audit_log.all()[0].action_type, "I")
-        self.assertEqual(category.audit_log.all()[0].action_user, None)
+        self.assertEqual(category.audit_log.first().name, category.name)
+        self.assertEqual(category.audit_log.first().description, category.description)
+        self.assertEqual(category.audit_log.first().action_type, "I")
+        self.assertEqual(category.audit_log.first().action_user, None)
 
 
     def test_logging_insert_auth(self):
         _setup_admin()
-        c = Client()
+        c = self.client
         c.login(username = "admin@example.com", password = "admin")
         self.run_client(c)
         category = ProductCategory.objects.get(name = 'Test Category 2')
-        self.assertEqual(category.audit_log.all()[0].name, category.name)
-        self.assertEqual(category.audit_log.all()[0].description, category.description)
-        self.assertEqual(category.audit_log.all()[0].action_type, "I")
-        self.assertNotEqual(category.audit_log.all()[0].action_user, None)
-        self.assertEqual(category.audit_log.all()[0].action_user.username, 'admin@example.com')
+        self.assertEqual(category.audit_log.first().name, category.name)
+        self.assertEqual(category.audit_log.first().description, category.description)
+        self.assertEqual(category.audit_log.first().action_type, "I")
+        self.assertNotEqual(category.audit_log.first().action_user, None)
+        self.assertEqual(category.audit_log.first().action_user.username, 'admin@example.com')
 
     def test_loggin_update_anon(self):
-        c = Client()
+        c = self.client
         self.run_client(c)
-        product=  Product.objects.get(name = 'Test Product')
-        self.assertGreater(product.audit_log.all()[0].action_date, product.audit_log.all()[1].action_date)
+        self.assertEqual(Product.objects.count(), 1)
+        product = Product.objects.get(name='Test Product')
+        self.assertGreater(product.audit_log.first().action_date, product.audit_log.all()[1].action_date)
         self.assertEqual(product.audit_log.all()[1].action_type, 'I')
-        self.assertEqual(product.audit_log.all()[0].action_type, 'U')
-        self.assertEqual(product.audit_log.all()[0].description, 'Test description new')
-        self.assertEqual(product.audit_log.all()[0].price, 5.00)
-        self.assertEqual(product.audit_log.all()[0].action_user, None)
+        self.assertEqual(product.audit_log.first().action_type, 'U')
+        self.assertEqual(product.audit_log.first().description, 'Test description new')
+        self.assertEqual(product.audit_log.first().price, 5.00)
+        self.assertEqual(product.audit_log.first().action_user, None)
 
-    def test_loging_update_auth(self):
+    def test_logging_update_auth(self):
         _setup_admin()
-        c = Client()
+        c = self.client
         c.login(username = 'admin@example.com', password = 'admin')
         self.run_client(c)
         product=  Product.objects.get(name = 'Test Product')
-        self.assertNotEqual(product.audit_log.all()[0].action_user, None)
-        self.assertEqual(product.audit_log.all()[0].action_user.username, 'admin@example.com')
+        self.assertNotEqual(product.audit_log.first().action_user, None)
+        self.assertEqual(product.audit_log.first().action_user.username, 'admin@example.com')
 
     def test_logging_delete_anon(self):
-        c = Client()
+        c = self.client
         self.run_client(c)
         c.post('/product/delete/1/')
-        self.assertEqual(Product.objects.all().count(), 0)
-        self.assertEqual(Product.audit_log.all()[0].action_type, 'D')
-        self.assertEqual(Product.audit_log.all()[0].name, 'Test Product')
-        self.assertEqual(Product.audit_log.all()[0].action_user, None)
+        self.assertEqual(Product.objects.count(), 0)
+        self.assertEqual(Product.audit_log.first().action_type, 'D')
+        self.assertEqual(Product.audit_log.first().name, 'Test Product')
+        self.assertEqual(Product.audit_log.first().action_user, None)
 
     def test_logging_delete_auth(self):
         _setup_admin()
-        c = Client()
+        c = self.client
         c.login(username = 'admin@example.com', password = 'admin')
         self.run_client(c)
-        self.assertEqual(Product.objects.all().count(), 1)
+        self.assertEqual(Product.objects.count(), 1)
         c.post('/product/delete/1/')
-        self.assertEqual(Product.objects.all().count(), 0)
-        self.assertEqual(Product.audit_log.all()[0].action_type, 'D')
-        self.assertEqual(Product.audit_log.all()[0].name, 'Test Product')
-        self.assertNotEqual(Product.audit_log.all()[0].action_user, None)
-        self.assertEqual(Product.audit_log.all()[0].action_user.username, 'admin@example.com')
+        self.assertEqual(Product.objects.count(), 0)
+        self.assertEqual(Product.audit_log.first().action_type, 'D')
+        self.assertEqual(Product.audit_log.first().name, 'Test Product')
+        self.assertNotEqual(Product.audit_log.first().action_user, None)
+        self.assertEqual(Product.audit_log.first().action_user.username, 'admin@example.com')
 
     def test_logging_inherited(self):
         _setup_admin()
-        c = Client()
+        c = self.client
         c.login(username = "admin@example.com", password = "admin")
         c.post('/extremewidget/create/', {'name': 'Test name', 'special_power': 'Testpower'})
-        widget = ExtremeWidget.objects.all()[0]
-        self.failUnlessEqual(widget.audit_log.all()[0].name, 'Test name')
-        self.failUnlessEqual(hasattr(widget.audit_log.all()[0], 'special_power'), True)
-        self.failUnlessEqual(widget.audit_log.all()[0].special_power, "Testpower")
+        widget = ExtremeWidget.objects.first()
+        self.failUnlessEqual(widget.audit_log.first().name, 'Test name')
+        self.failUnlessEqual(hasattr(widget.audit_log.first(), 'special_power'), True)
+        self.failUnlessEqual(widget.audit_log.first().special_power, "Testpower")
 
     def test_logging_custom_user(self):
         _setup_admin()
-        c = Client()
+        c = self.client
         c.login(username = "admin@example.com", password = "admin")
         c.post('/employee/create/', {'email': 'vvangelovski@gmail.com', 'password': 'testpass'})
 
@@ -218,20 +220,27 @@ class TestOneToOne(TestCase):
         client.post('/property/update/1/', {'name': 'Property2', 'owned_by': '2'})
 
     def test_fields(self):
-        c = Client()
+        c = self.client
         self.run_client(c)
-        owner = PropertyOwner.objects.get(pk = 1)
-        prop = Property.objects.get(pk = 1)
-        self.assertEqual(prop.audit_log.all()[0]._meta.get_field('owned_by').__class__, models.ForeignKey)
+        self.assertEqual(PropertyOwner.objects.count(), 2)
+        self.assertEqual(Property.objects.count(), 1)
+
+        owner = PropertyOwner.objects.first()
+        new_owner = PropertyOwner.objects.all()[1]
+        prop = Property.objects.first()
+        self.assertEqual(prop.owned_by, new_owner.pk)
 
     def test_logging(self):
-        c = Client()
+        c = self.client
         self.run_client(c)
-        owner1 = PropertyOwner.objects.get(pk = 1)
-        owner2 = PropertyOwner.objects.get(pk = 2)
-        prop = Property.objects.get(pk = 1)
-        self.assertEqual(prop.audit_log.all().count(), 2)
-        self.assertEqual(prop.audit_log.all()[0].action_type, 'U')
+        self.assertEqual(PropertyOwner.objects.count(), 2)
+        self.assertEqual(Property.objects.count(), 1)
+
+        owner1 = PropertyOwner.objects.first()
+        owner2 = PropertyOwner.objects.all()[1]
+        prop = Property.objects.first()
+        self.assertEqual(prop.audit_log.count(), 2)
+        self.assertEqual(prop.audit_log.first().action_type, 'U')
         self.assertEqual(prop.audit_log.all()[1].action_type, 'I')
-        self.assertEqual(prop.audit_log.all()[0].owned_by, owner2)
+        self.assertEqual(prop.audit_log.first().owned_by, owner2)
         self.assertEqual(prop.audit_log.all()[1].owned_by, owner1)
