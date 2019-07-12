@@ -98,7 +98,6 @@ class JWTAuthMiddleware(MiddlewareMixin):
     def get_user_jwt(self, request):
         from rest_framework.request import Request
         from rest_framework.exceptions import AuthenticationFailed
-        from django.utils.functional import SimpleLazyObject
         from django.contrib.auth.middleware import get_user
         from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 

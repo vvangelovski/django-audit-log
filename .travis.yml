@@ -1,0 +1,11 @@
+language: python
+dist: xenial
+python:
+  - '2.7'
+  - '3.6'
+env:
+  - DJANGO="Django>=1.11,<1.12.0"
+install:
+  - pip install -q $DJANGO
+script:
+  - make test
