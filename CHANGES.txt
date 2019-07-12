@@ -1,0 +1,5 @@
+0.8.0 (2019-07-12)
+==================
+
+* Use Django's MiddlewareMixin for compatibility with newer versions
+  of Django.
