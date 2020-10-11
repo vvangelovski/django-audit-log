@@ -1,6 +1,7 @@
 from django.db.models import signals
 from django.utils.deprecation import MiddlewareMixin
-from django.utils.functional import curry
+#from django.utils.functional import curry
+from functools import partial
 
 from audit_log import registration, settings
 from audit_log.models import fields
@@ -34,8 +35,10 @@ class UserLoggingMiddleware(MiddlewareMixin):
             else:
                 user = None
             session = request.session.session_key
-            update_pre_save_info = curry(self._update_pre_save_info, user, session)
-            update_post_save_info = curry(self._update_post_save_info, user, session)
+            #update_pre_save_info = curry(self._update_pre_save_info, user, session)
+            #update_post_save_info = curry(self._update_post_save_info, user, session)
+            update_pre_save_info = partial(self._update_pre_save_info, user, session)
+            update_post_save_info = partial(self._update_post_save_info, user, session)
             signals.pre_save.connect(update_pre_save_info,  dispatch_uid = (self.__class__, request,), weak = False)
             signals.post_save.connect(update_post_save_info,  dispatch_uid = (self.__class__, request,), weak = False)
 
