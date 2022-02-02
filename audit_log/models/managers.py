@@ -2,8 +2,8 @@ from __future__ import unicode_literals
 
 import copy
 import datetime
+from functools import partial
 from django.db import models
-from django.utils.functional import curry
 from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 
