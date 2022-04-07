@@ -1,6 +1,6 @@
 from django.db.models import signals
 from django.utils.deprecation import MiddlewareMixin
-from django.utils.functional import curry
+from functools import partial as curry
 
 from audit_log import registration, settings
 from audit_log.models import fields
