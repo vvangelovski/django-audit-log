@@ -4,12 +4,17 @@ import copy
 import datetime
 from functools import partial
 from django.db import models
-from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 
 from audit_log.models.fields import LastUserField
 from audit_log import settings as local_settings
 
+try:
+	# Django 3+
+	from django.utils.translation import gettext_lazy as _
+except ImportError:
+	# Django <3
+	from django.utils.translation import ugettext_lazy as _
 
 try:
     from django.utils.timezone import now as datetime_now
